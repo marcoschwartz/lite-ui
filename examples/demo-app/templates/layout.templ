@@ -27,7 +27,7 @@ templ Layout(title string) {
 		<body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
 			@ui.Sidebar(
 				SidebarHeader(),
-				SidebarContent(),
+				SidebarContent(title),
 				SidebarFooter(),
 			)
 			@ui.Navbar(EmptyLogo(), NavRight())
@@ -97,7 +97,7 @@ templ SidebarHeader() {
 }
 
 // SidebarContent - Navigation and project selector with advanced logic
-templ SidebarContent() {
+templ SidebarContent(currentPage string) {
 	<div class="flex flex-col h-full">
 		<!-- Project Selector with conditional rendering -->
 		<div class="px-4">
@@ -113,7 +113,7 @@ templ SidebarContent() {
 
 		<!-- Navigation Menu -->
 		<nav class="flex-1 px-4 py-6 overflow-y-auto">
-			@ui.Menu(SidebarItems(), "vertical")
+			@ui.Menu(SidebarItems(currentPage), "vertical")
 		</nav>
 
 		<!-- Additional custom section with logic -->
@@ -150,13 +150,14 @@ templ SidebarFooter() {
 }
 
 // SidebarItems returns navigation items
-func SidebarItems() []ui.SidebarItem {
+func SidebarItems(currentPage string) []ui.SidebarItem {
 	return []ui.SidebarItem{
-		{Label: "Home", Href: "/", Icon: ui.IconHome(), Active: false},
-		{Label: "Inputs & Forms", Href: "/inputs", Icon: ui.IconCheck("gray"), Active: false},
-		{Label: "Feedback & Indicators", Href: "/feedback", Icon: ui.IconCheck("indigo"), Active: false},
-		{Label: "Navigation", Href: "/navigation", Icon: ui.IconFolder(), Active: false},
-		{Label: "Layout & Display", Href: "/layout", Icon: ui.IconChart(), Active: false},
+		{Label: "Home", Href: "/", Icon: ui.IconHome(), Active: currentPage == "Home"},
+		{Label: "Inputs & Forms", Href: "/inputs", Icon: ui.IconCheck("gray"), Active: currentPage == "Inputs & Forms"},
+		{Label: "Feedback & Indicators", Href: "/feedback", Icon: ui.IconCheck("indigo"), Active: currentPage == "Feedback & Indicators"},
+		{Label: "Navigation", Href: "/navigation", Icon: ui.IconFolder(), Active: currentPage == "Navigation"},
+		{Label: "Layout & Display", Href: "/layout", Icon: ui.IconChart(), Active: currentPage == "Layout & Display"},
+		{Label: "Data Display", Href: "/data-display", Icon: ui.IconFolder(), Active: currentPage == "Data Display"},
 	}
 }
 

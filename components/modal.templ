@@ -2,15 +2,16 @@ package components
 
 // Modal - Generic modal component using Alpine.js
 // Usage:
-//   @ui.Modal("modal_id", "Modal Title", TriggerButton(), ModalContent())
-templ Modal(id string, title string, trigger templ.Component, content templ.Component) {
+//   <div x-data>
+//     @ui.Button("Open Modal", ui.ButtonPrimary, templ.Attributes{"@click": "window.dispatchEvent(new CustomEvent('open-modal', { detail: 'my_modal' }))"})
+//     @ui.Modal("my_modal", "Modal Title", ModalContent())
+//   </div>
+templ Modal(id string, title string, content templ.Component) {
 	<div
 		x-data="{ open: false }"
 		@keydown.escape.window="open = false"
+		@open-modal.window={ "open = ($event.detail === '" + id + "')" }
 	>
-		<!-- Trigger -->
-		@trigger
-
 		<!-- Modal Overlay -->
 		<div
 			x-cloak

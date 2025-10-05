@@ -2,7 +2,7 @@ package components
 
 // Radio - Radio button component with custom styling
 templ Radio(name string, value string, label string, checked bool, attrs templ.Attributes) {
-	<label class="inline-flex items-center cursor-pointer group">
+	<label class="flex items-center cursor-pointer group">
 		<div class="relative">
 			<input
 				type="radio"
@@ -27,6 +27,6 @@ templ Radio(name string, value string, label string, checked bool, attrs templ.A
 // RadioGroup - Radio group container
 templ RadioGroup(children templ.Component) {
 	<div class="space-y-2">
-		{ children... }
+		@children
 	</div>
 }

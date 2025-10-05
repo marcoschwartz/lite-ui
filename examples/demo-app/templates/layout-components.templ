@@ -94,10 +94,10 @@ templ Accordion3() {
 }
 
 templ ModalDemo() {
-	@ui.Modal("layout_modal", "Example Modal",
-		ui.Button("Open Modal", ui.ButtonPrimary, templ.Attributes{}),
-		ModalContentDemo(),
-	)
+	<div x-data>
+		@ui.Button("Open Modal", ui.ButtonPrimary, templ.Attributes{"@click": "window.dispatchEvent(new CustomEvent('open-modal', { detail: 'layout_modal' }))"})
+		@ui.Modal("layout_modal", "Example Modal", ModalContentDemo())
+	</div>
 }
 
 templ ModalContentDemo() {
@@ -105,11 +105,10 @@ templ ModalContentDemo() {
 }
 
 templ DrawerDemo() {
-	@ui.Drawer("layout_drawer", "Example Drawer",
-		ui.Button("Open Drawer", ui.ButtonPrimary, templ.Attributes{}),
-		DrawerContentDemo(),
-		"right",
-	)
+	<div x-data>
+		@ui.Button("Open Drawer", ui.ButtonPrimary, templ.Attributes{"@click": "window.dispatchEvent(new CustomEvent('open-drawer', { detail: 'layout_drawer' }))"})
+		@ui.Drawer("layout_drawer", "Example Drawer", DrawerContentDemo(), "right")
+	</div>
 }
 
 templ DrawerContentDemo() {

@@ -1,0 +1,82 @@
+package components
+
+// FileInput - File upload input component
+// Usage:
+//   @ui.FileInput("Upload File", "file", false, false, "", templ.Attributes{})
+//   @ui.FileInput("Upload Images", "images", true, false, "image/*", templ.Attributes{})
+templ FileInput(label string, name string, multiple bool, required bool, accept string, attrs templ.Attributes) {
+	<div>
+		if label != "" {
+			<label for={ name } class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+				{ label }
+				if required {
+					<span class="text-red-500">*</span>
+				}
+			</label>
+		}
+		<div
+			x-data="{
+				fileName: '',
+				fileCount: 0,
+				dragOver: false
+			}"
+			@drop.prevent="
+				const files = $event.dataTransfer.files;
+				$refs.fileInput.files = files;
+				fileCount = files.length;
+				fileName = files.length === 1 ? files[0].name : `${files.length} files selected`;
+				dragOver = false;
+			"
+			@dragover.prevent="dragOver = true"
+			@dragleave.prevent="dragOver = false"
+			class="relative"
+		>
+			<input
+				type="file"
+				id={ name }
+				name={ name }
+				if multiple {
+					multiple
+				}
+				if required {
+					required
+				}
+				if accept != "" {
+					accept={ accept }
+				}
+				class="sr-only"
+				x-ref="fileInput"
+				@change="
+					const files = $event.target.files;
+					fileCount = files.length;
+					fileName = files.length === 1 ? files[0].name : `${files.length} files selected`;
+				"
+				{ attrs... }
+			/>
+			<label
+				for={ name }
+				class="flex flex-col items-center justify-center w-full px-4 py-6 border-2 border-dashed rounded-lg cursor-pointer transition-colors"
+				:class="dragOver ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700'"
+			>
+				<div class="flex flex-col items-center justify-center">
+					<!-- Upload Icon -->
+					<svg class="w-8 h-8 mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+					</svg>
+					<!-- File name or prompt -->
+					<p class="mb-1 text-sm text-gray-700 dark:text-gray-300" x-show="!fileName">
+						<span class="font-semibold">Click to upload</span> or drag and drop
+					</p>
+					<p class="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300" x-show="fileName" x-text="fileName"></p>
+					<p class="text-xs text-gray-500 dark:text-gray-400">
+						if accept != "" {
+							{ accept }
+						} else {
+							Any file type
+						}
+					</p>
+				</div>
+			</label>
+		</div>
+	</div>
+}

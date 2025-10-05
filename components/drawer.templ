@@ -2,15 +2,17 @@ package components
 
 // Drawer - Slide-out drawer component with Alpine.js
 // Position: left, right
-templ Drawer(id string, title string, trigger templ.Component, content templ.Component, position string) {
+// Usage:
+//   <div x-data>
+//     @ui.Button("Open Drawer", ui.ButtonPrimary, templ.Attributes{"@click": "window.dispatchEvent(new CustomEvent('open-drawer', { detail: 'my_drawer' }))"})
+//     @ui.Drawer("my_drawer", "Drawer Title", DrawerContent(), "right")
+//   </div>
+templ Drawer(id string, title string, content templ.Component, position string) {
 	<div
 		x-data="{ open: false }"
 		@keydown.escape.window="open = false"
+		@open-drawer.window={ "open = ($event.detail === '" + id + "')" }
 	>
-		<!-- Trigger -->
-		<div @click="open = true">
-			@trigger
-		</div>
 
 		<!-- Overlay -->
 		<div

@@ -29,6 +29,16 @@ templ InputsPage() {
 				</div>
 			</div>
 
+			<!-- Date & Time Pickers -->
+			<div class="mb-8">
+				<h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Date & Time</h2>
+				<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+					@ui.Card(ui.CardConfig{Title: "Date Picker"}, DatePickerDemo())
+					@ui.Card(ui.CardConfig{Title: "Rating"}, RatingDemo())
+					@ui.Card(ui.CardConfig{Title: "File Upload"}, FileInputDemo())
+				</div>
+			</div>
+
 			<!-- Complete Form -->
 			<div>
 				@ui.Card(ui.CardConfig{Title: "Complete Form Example"}, CompleteFormDemo())
@@ -65,13 +75,11 @@ templ CheckboxDemo() {
 }
 
 templ RadioDemo() {
-	@ui.RadioGroup(RadioGroupContent())
-}
-
-templ RadioGroupContent() {
-	@ui.Radio("size", "sm", "Small", false, templ.Attributes{})
-	@ui.Radio("size", "md", "Medium", true, templ.Attributes{})
-	@ui.Radio("size", "lg", "Large", false, templ.Attributes{})
+	<div class="space-y-2">
+		@ui.Radio("size", "sm", "Small", false, templ.Attributes{})
+		@ui.Radio("size", "md", "Medium", true, templ.Attributes{})
+		@ui.Radio("size", "lg", "Large", false, templ.Attributes{})
+	</div>
 }
 
 templ ToggleDemo() {
@@ -84,6 +92,34 @@ templ ToggleDemo() {
 templ SwitchDemo() {
 	<div class="space-y-3">
 		@ui.Switch("dark-mode", "Dark Mode", "Enable dark theme", false, templ.Attributes{})
+	</div>
+}
+
+templ DatePickerDemo() {
+	<div class="space-y-4">
+		@ui.DatePicker("Select Date", "event-date", "", "date", false, templ.Attributes{})
+		@ui.DatePicker("Select Date & Time", "event-datetime", "", "datetime-local", false, templ.Attributes{})
+		@ui.DatePicker("Select Time", "event-time", "", "time", false, templ.Attributes{})
+	</div>
+}
+
+templ RatingDemo() {
+	<div class="space-y-4">
+		<div>
+			<p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Read-only rating:</p>
+			@ui.Rating(5, 4, "rating-display", false, templ.Attributes{})
+		</div>
+		<div>
+			<p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Interactive rating:</p>
+			@ui.Rating(5, 0, "rating-input", true, templ.Attributes{})
+		</div>
+	</div>
+}
+
+templ FileInputDemo() {
+	<div class="space-y-4">
+		@ui.FileInput("Upload Document", "document", false, false, "", templ.Attributes{})
+		<div class="text-xs text-gray-500 dark:text-gray-400">Drag & drop supported</div>
 	</div>
 }
 
