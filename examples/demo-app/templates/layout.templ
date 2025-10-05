@@ -1,0 +1,65 @@
+package templates
+
+import ui "github.com/marcoschwartz/lite-ui/components"
+
+templ Layout(title string) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>{ title } - Lite UI Demo</title>
+			<link rel="stylesheet" href="/static/css/output.css"/>
+			<style>
+				[x-cloak] { display: none !important; }
+			</style>
+			<!-- Dark mode script -->
+			<script>
+				const theme = localStorage.getItem('theme') ||
+					(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+				if (theme === 'dark') {
+					document.documentElement.classList.add('dark');
+				}
+			</script>
+			<script src="/static/js/htmx.min.js"></script>
+			<script defer src="/static/js/alpine.min.js"></script>
+		</head>
+		<body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+			@ui.Sidebar(SidebarItems(), "Demo User", "demo@example.com", "https://ui-avatars.com/api/?name=Demo+User&background=6366f1&color=fff", ui.Project{}, nil)
+			@ui.Navbar(EmptyLogo(), NavRight())
+			<main class="lg:ml-64 pt-16">
+				{ children... }
+			</main>
+		</body>
+	</html>
+}
+
+// Logo component
+templ Logo() {
+	<div class="flex items-center gap-2">
+		<h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Lite UI</h1>
+		<span class="text-xs px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 rounded-full font-semibold">DEMO</span>
+	</div>
+}
+
+// EmptyLogo - Empty logo for navbar
+templ EmptyLogo() {
+	<div></div>
+}
+
+// NavRight component
+templ NavRight() {
+	@ui.DarkModeToggle()
+}
+
+// SidebarItems returns navigation items
+func SidebarItems() []ui.SidebarItem {
+	return []ui.SidebarItem{
+		{Label: "Home", Href: "/", Icon: ui.IconHome(), Active: false},
+		{Label: "Inputs & Forms", Href: "/inputs", Icon: ui.IconCheck("gray"), Active: false},
+		{Label: "Feedback & Indicators", Href: "/feedback", Icon: ui.IconCheck("indigo"), Active: false},
+		{Label: "Navigation", Href: "/navigation", Icon: ui.IconFolder(), Active: false},
+		{Label: "Layout & Display", Href: "/layout", Icon: ui.IconChart(), Active: false},
+	}
+}
+

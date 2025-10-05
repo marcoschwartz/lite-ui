@@ -1,0 +1,137 @@
+package templates
+
+import ui "github.com/marcoschwartz/lite-ui/components"
+
+templ NavigationPage() {
+	@Layout("Navigation") {
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+			<h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">Navigation Components</h1>
+
+			<!-- Breadcrumbs -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Breadcrumbs"}, BreadcrumbsDemo())
+			</div>
+
+			<!-- Tabs -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Tabs"}, TabsDemo())
+			</div>
+
+			<!-- Pagination -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Pagination"}, PaginationDemo())
+			</div>
+
+			<!-- Stepper -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Stepper"}, StepperDemo())
+			</div>
+
+			<!-- Menu -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Menu"}, MenuDemo())
+			</div>
+
+			<!-- Menu with Sections -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Menu with Sections"}, MenuSectionsDemo())
+			</div>
+
+			<!-- Dropdown & Navbar -->
+			<div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+				@ui.Card(ui.CardConfig{Title: "Dropdown"}, DropdownDemo())
+				@ui.Card(ui.CardConfig{Title: "Navbar"}, NavbarPreview())
+			</div>
+		</div>
+	}
+}
+
+templ BreadcrumbsDemo() {
+	@ui.Breadcrumbs([]ui.Breadcrumb{
+		{Label: "Home", Href: "/"},
+		{Label: "Navigation", Href: "/navigation"},
+		{Label: "Current Page", Href: "#"},
+	})
+}
+
+templ TabsDemo() {
+	@ui.Tabs("nav-tabs", []ui.Tab{
+		{ID: "tab1", Label: "Overview", Content: Tab1Content()},
+		{ID: "tab2", Label: "Details", Content: Tab2Content()},
+		{ID: "tab3", Label: "Settings", Content: Tab3Content()},
+	})
+}
+
+templ Tab1Content() {
+	<p class="text-gray-600 dark:text-gray-400">This is the overview tab content.</p>
+}
+
+templ Tab2Content() {
+	<p class="text-gray-600 dark:text-gray-400">This is the details tab content.</p>
+}
+
+templ Tab3Content() {
+	<p class="text-gray-600 dark:text-gray-400">This is the settings tab content.</p>
+}
+
+templ PaginationDemo() {
+	@ui.Pagination(ui.PaginationConfig{
+		CurrentPage: 2,
+		TotalPages:  5,
+		TotalItems:  48,
+		PerPage:     10,
+		BasePath:    "/navigation",
+	})
+}
+
+templ StepperDemo() {
+	@ui.Stepper([]ui.Step{
+		{Label: "Account"},
+		{Label: "Profile"},
+		{Label: "Preferences"},
+		{Label: "Done"},
+	}, 1)
+}
+
+templ DropdownDemo() {
+	@ui.Dropdown(
+		ui.Button("Menu", ui.ButtonSecondary, templ.Attributes{}),
+		[]ui.DropdownItem{
+			{Label: "Profile", Href: "#"},
+			{Label: "Settings", Href: "#"},
+			{Label: "Sign out", Href: "#"},
+		},
+	)
+}
+
+templ MenuDemo() {
+	@ui.Menu([]ui.MenuItem{
+		{Label: "Dashboard", Href: "#", Icon: ui.IconHome(), Active: true},
+		{Label: "Projects", Href: "#", Icon: ui.IconFolder(), Badge: "12"},
+		{Label: "Team", Href: "#", Icon: ui.IconUsers("gray")},
+		{Label: "Settings", Href: "#", Icon: ui.IconSettings()},
+	}, "vertical")
+}
+
+templ MenuSectionsDemo() {
+	<div class="space-y-4">
+		@ui.MenuTitle("Main")
+		@ui.Menu([]ui.MenuItem{
+			{Label: "Dashboard", Href: "#", Icon: ui.IconHome(), Active: true},
+			{Label: "Analytics", Href: "#", Icon: ui.IconChart()},
+		}, "vertical")
+
+		@ui.MenuDivider()
+
+		@ui.MenuTitle("Settings")
+		@ui.Menu([]ui.MenuItem{
+			{Label: "Account", Href: "#", Icon: ui.IconSettings()},
+			{Label: "Team", Href: "#", Icon: ui.IconUsers("gray")},
+			{Label: "Billing", Href: "#", Icon: ui.IconCurrency("gray"), Badge: "New"},
+		}, "vertical")
+	</div>
+}
+
+templ NavbarPreview() {
+	<p class="text-sm text-gray-600 dark:text-gray-400">See the navbar at the top of this page for a live example.</p>
+}

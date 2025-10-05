@@ -1,0 +1,106 @@
+package templates
+
+import ui "github.com/marcoschwartz/lite-ui/components"
+
+templ InputsPage() {
+	@Layout("Inputs & Forms") {
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+			<h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">Inputs & Forms</h1>
+
+			<!-- Text Inputs -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Text Inputs"}, TextInputsDemo())
+			</div>
+
+			<!-- Select & Textarea -->
+			<div class="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+				@ui.Card(ui.CardConfig{Title: "Select"}, SelectDemo())
+				@ui.Card(ui.CardConfig{Title: "Textarea"}, TextareaDemo())
+			</div>
+
+			<!-- Checkbox, Radio, Toggle, Switch -->
+			<div class="mb-8">
+				<h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Selection Controls</h2>
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+					@ui.Card(ui.CardConfig{Title: "Checkbox"}, CheckboxDemo())
+					@ui.Card(ui.CardConfig{Title: "Radio"}, RadioDemo())
+					@ui.Card(ui.CardConfig{Title: "Toggle"}, ToggleDemo())
+					@ui.Card(ui.CardConfig{Title: "Switch"}, SwitchDemo())
+				</div>
+			</div>
+
+			<!-- Complete Form -->
+			<div>
+				@ui.Card(ui.CardConfig{Title: "Complete Form Example"}, CompleteFormDemo())
+			</div>
+		</div>
+	}
+}
+
+templ TextInputsDemo() {
+	<div class="space-y-4">
+		@ui.TextInput("Full Name", "text", "name", "John Doe", true, templ.Attributes{})
+		@ui.TextInput("Email", "email", "email", "john@example.com", true, templ.Attributes{})
+		@ui.TextInput("Password", "password", "password", "••••••••", false, templ.Attributes{})
+	</div>
+}
+
+templ SelectDemo() {
+	@ui.Select("Country", "country", "Select a country", true, []ui.SelectOption{
+		{Value: "us", Label: "United States"},
+		{Value: "uk", Label: "United Kingdom"},
+		{Value: "ca", Label: "Canada"},
+	})
+}
+
+templ TextareaDemo() {
+	@ui.TextArea("Message", "message", "Enter your message...", 4, false, templ.Attributes{})
+}
+
+templ CheckboxDemo() {
+	<div class="space-y-3">
+		@ui.Checkbox("terms", "I agree to terms", false, templ.Attributes{})
+		@ui.Checkbox("newsletter", "Subscribe to newsletter", true, templ.Attributes{})
+	</div>
+}
+
+templ RadioDemo() {
+	@ui.RadioGroup(RadioGroupContent())
+}
+
+templ RadioGroupContent() {
+	@ui.Radio("size", "sm", "Small", false, templ.Attributes{})
+	@ui.Radio("size", "md", "Medium", true, templ.Attributes{})
+	@ui.Radio("size", "lg", "Large", false, templ.Attributes{})
+}
+
+templ ToggleDemo() {
+	<div class="space-y-3">
+		@ui.Toggle("notifications", "Notifications", true, templ.Attributes{})
+		@ui.Toggle("auto-save", "Auto-save", false, templ.Attributes{})
+	</div>
+}
+
+templ SwitchDemo() {
+	<div class="space-y-3">
+		@ui.Switch("dark-mode", "Dark Mode", "Enable dark theme", false, templ.Attributes{})
+	</div>
+}
+
+templ CompleteFormDemo() {
+	<form class="space-y-4">
+		@ui.FormGroup() {
+			@ui.TextInput("Full Name", "text", "fullname", "John Doe", true, templ.Attributes{})
+			@ui.TextInput("Email", "email", "email", "john@example.com", true, templ.Attributes{})
+			@ui.Select("Role", "role", "Select a role", true, []ui.SelectOption{
+				{Value: "user", Label: "User"},
+				{Value: "admin", Label: "Administrator"},
+			})
+			@ui.TextArea("Bio", "bio", "Tell us about yourself...", 3, false, templ.Attributes{})
+		}
+		<div class="flex gap-4">
+			@ui.Button("Submit", ui.ButtonPrimary, templ.Attributes{"type": "submit"})
+			@ui.Button("Cancel", ui.ButtonSecondary, templ.Attributes{"type": "button"})
+		</div>
+	</form>
+}

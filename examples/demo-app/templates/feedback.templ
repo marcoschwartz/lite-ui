@@ -1,0 +1,95 @@
+package templates
+
+import ui "github.com/marcoschwartz/lite-ui/components"
+
+templ FeedbackPage() {
+	@Layout("Feedback & Indicators") {
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+			<h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">Feedback & Indicators</h1>
+
+			<!-- Alerts -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Alerts"}, AlertsDemo())
+			</div>
+
+			<!-- Loading Spinners -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Loading Spinners"}, LoadingDemo())
+			</div>
+
+			<!-- Tooltips -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Tooltips"}, TooltipsDemo())
+			</div>
+
+			<!-- Badges -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Badges"}, BadgesDemo())
+			</div>
+
+			<!-- Progress & Slider -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Progress & Slider"}, ProgressSliderDemo())
+			</div>
+		</div>
+	}
+}
+
+templ AlertsDemo() {
+	<div class="space-y-4">
+		@ui.Alert("info", "Information", "This is an informational alert message.", false)
+		@ui.Alert("success", "Success!", "Your changes have been saved successfully.", true)
+		@ui.Alert("warning", "Warning", "Please review your input before continuing.", true)
+		@ui.Alert("error", "Error", "An error occurred while processing your request.", true)
+	</div>
+}
+
+templ LoadingDemo() {
+	<div class="flex flex-wrap items-center gap-8">
+		<div class="flex flex-col items-center gap-2">
+			@ui.Loading("sm", "indigo")
+			<span class="text-xs text-gray-500 dark:text-gray-400">Small</span>
+		</div>
+		<div class="flex flex-col items-center gap-2">
+			@ui.Loading("md", "blue")
+			<span class="text-xs text-gray-500 dark:text-gray-400">Medium</span>
+		</div>
+		<div class="flex flex-col items-center gap-2">
+			@ui.Loading("lg", "green")
+			<span class="text-xs text-gray-500 dark:text-gray-400">Large</span>
+		</div>
+	</div>
+}
+
+templ TooltipsDemo() {
+	<div class="flex flex-wrap gap-4">
+		@ui.Tooltip("Tooltip on top", "top", ui.Button("Top", ui.ButtonSecondary, templ.Attributes{}))
+		@ui.Tooltip("Tooltip on bottom", "bottom", ui.Button("Bottom", ui.ButtonSecondary, templ.Attributes{}))
+		@ui.Tooltip("Tooltip on left", "left", ui.Button("Left", ui.ButtonSecondary, templ.Attributes{}))
+		@ui.Tooltip("Tooltip on right", "right", ui.Button("Right", ui.ButtonSecondary, templ.Attributes{}))
+	</div>
+}
+
+templ BadgesDemo() {
+	<div class="flex flex-wrap gap-2">
+		@ui.Badge("Default", "gray")
+		@ui.Badge("Primary", "blue")
+		@ui.Badge("Success", "green")
+		@ui.Badge("Warning", "yellow")
+		@ui.Badge("Danger", "red")
+		@ui.Badge("Info", "indigo")
+	</div>
+}
+
+templ ProgressSliderDemo() {
+	<div class="space-y-6">
+		<div>
+			<label class="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">Progress Bar</label>
+			@ui.Progress(75, 100, "md", "indigo", true)
+		</div>
+		<div>
+			<label class="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">Slider</label>
+			@ui.Slider("volume", "Volume", 0, 100, 50, 1, templ.Attributes{})
+		</div>
+	</div>
+}

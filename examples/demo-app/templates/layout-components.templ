@@ -1,0 +1,149 @@
+package templates
+
+import ui "github.com/marcoschwartz/lite-ui/components"
+
+templ LayoutComponentsPage() {
+	@Layout("Layout & Display") {
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+			<h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">Layout & Display Components</h1>
+
+			<!-- Cards -->
+			<div class="mb-8">
+				<h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Cards</h2>
+				<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+					@ui.Card(ui.CardConfig{Variant: "stat", StatLabel: "Total Users", StatValue: "2,345", StatIcon: ui.IconUsers("indigo"), StatColor: "indigo"}, nil)
+					@ui.Card(ui.CardConfig{Variant: "stat", StatLabel: "Revenue", StatValue: "$12.5k", StatIcon: ui.IconCurrency("green"), StatColor: "green"}, nil)
+					@ui.Card(ui.CardConfig{Variant: "stat", StatLabel: "Projects", StatValue: "42", StatIcon: ui.IconFolder(), StatColor: "blue"}, nil)
+					@ui.Card(ui.CardConfig{Variant: "stat", StatLabel: "Growth", StatValue: "+15%", StatIcon: ui.IconTrending("purple"), StatColor: "purple"}, nil)
+				</div>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+					@ui.Card(ui.CardConfig{Title: "Card with Header"}, SimpleCardContent())
+					@ui.Card(ui.CardConfig{}, SimpleCardContent())
+				</div>
+			</div>
+
+			<!-- Dividers -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Dividers"}, DividersDemo())
+			</div>
+
+			<!-- Accordion -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Accordion"}, AccordionDemo())
+			</div>
+
+			<!-- Modals & Drawers -->
+			<div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+				@ui.Card(ui.CardConfig{Title: "Modal"}, ModalDemo())
+				@ui.Card(ui.CardConfig{Title: "Drawer"}, DrawerDemo())
+			</div>
+
+			<!-- Table -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Table"}, TableDemo())
+			</div>
+
+			<!-- Timeline -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Timeline"}, TimelineDemo())
+			</div>
+
+			<!-- Avatar -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Avatars"}, AvatarsDemo())
+			</div>
+		</div>
+	}
+}
+
+templ SimpleCardContent() {
+	<p class="text-gray-600 dark:text-gray-400">This is a card component with content inside.</p>
+}
+
+templ DividersDemo() {
+	<div class="space-y-6">
+		<div>
+			<p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Simple horizontal divider:</p>
+			@ui.Divider("horizontal", "")
+		</div>
+		<div>
+			<p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Divider with text:</p>
+			@ui.Divider("horizontal", "OR")
+		</div>
+	</div>
+}
+
+templ AccordionDemo() {
+	@ui.Accordion([]ui.AccordionItem{
+		{ID: "item1", Title: "What is Lite UI?", Content: Accordion1()},
+		{ID: "item2", Title: "How do I install it?", Content: Accordion2()},
+		{ID: "item3", Title: "Is it free to use?", Content: Accordion3()},
+	}, false)
+}
+
+templ Accordion1() {
+	<p>Lite UI is a lightweight component library for Go + Templ applications.</p>
+}
+
+templ Accordion2() {
+	<p>Install with: <code class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-sm">go get github.com/marcoschwartz/lite-ui</code></p>
+}
+
+templ Accordion3() {
+	<p>Yes! Lite UI is open source and free to use under the MIT license.</p>
+}
+
+templ ModalDemo() {
+	@ui.Modal("layout_modal", "Example Modal",
+		ui.Button("Open Modal", ui.ButtonPrimary, templ.Attributes{}),
+		ModalContentDemo(),
+	)
+}
+
+templ ModalContentDemo() {
+	<p class="text-gray-600 dark:text-gray-400">This is modal content.</p>
+}
+
+templ DrawerDemo() {
+	@ui.Drawer("layout_drawer", "Example Drawer",
+		ui.Button("Open Drawer", ui.ButtonPrimary, templ.Attributes{}),
+		DrawerContentDemo(),
+		"right",
+	)
+}
+
+templ DrawerContentDemo() {
+	<p class="text-gray-600 dark:text-gray-400">This is drawer content.</p>
+}
+
+templ TableDemo() {
+	@ui.Table([]string{"Name", "Email", "Role"}, TableRowsDemo())
+}
+
+templ TableRowsDemo() {
+	<tr>
+		<td class="px-6 py-4 text-gray-900 dark:text-gray-100">John Doe</td>
+		<td class="px-6 py-4 text-gray-900 dark:text-gray-100">john@example.com</td>
+		<td class="px-6 py-4">@ui.Badge("Admin", "red")</td>
+	</tr>
+	<tr>
+		<td class="px-6 py-4 text-gray-900 dark:text-gray-100">Jane Smith</td>
+		<td class="px-6 py-4 text-gray-900 dark:text-gray-100">jane@example.com</td>
+		<td class="px-6 py-4">@ui.Badge("User", "blue")</td>
+	</tr>
+}
+
+templ TimelineDemo() {
+	@ui.Timeline([]ui.TimelineItem{
+		{Title: "Account Created", Description: "Your account was created", Time: "2h ago", Icon: ui.IconCheck("green"), Color: "green"},
+		{Title: "Profile Updated", Description: "You updated your profile", Time: "1h ago", Icon: ui.IconUsers("blue"), Color: "blue"},
+	})
+}
+
+templ AvatarsDemo() {
+	<div class="flex gap-4 items-center">
+		@ui.Avatar("https://ui-avatars.com/api/?name=John+Doe&background=6366f1&color=fff", "John Doe", "sm")
+		@ui.Avatar("https://ui-avatars.com/api/?name=Jane+Smith&background=10b981&color=fff", "Jane Smith", "md")
+		@ui.Avatar("https://ui-avatars.com/api/?name=Bob+Johnson&background=f59e0b&color=fff", "Bob Johnson", "lg")
+	</div>
+}
