@@ -15,19 +15,19 @@ templ Timeline(items []TimelineItem) {
 					</div>
 					<!-- Vertical line (only show if not last item) -->
 					if i < len(items)-1 {
-						<div class="w-0.5 h-full mt-2 bg-gray-700 dark:bg-gray-600 flex-grow"></div>
+						<div class="w-0.5 h-full mt-2 bg-gray-300 dark:bg-gray-600 flex-grow"></div>
 					}
 				</div>
 
 				<!-- Right side: Content -->
 				<div class="flex-1 pb-6">
-					<div class="bg-gray-800 dark:bg-gray-700/50 rounded-lg border border-gray-700 dark:border-gray-600 p-5 shadow-sm">
+					<div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5 shadow-sm">
 						<div class="flex items-start justify-between gap-4 mb-2">
-							<h4 class="text-lg font-semibold text-white">{ item.Title }</h4>
-							<span class="text-xs text-gray-400 whitespace-nowrap mt-1">{ item.Time }</span>
+							<h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{ item.Title }</h4>
+							<span class="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap mt-1">{ item.Time }</span>
 						</div>
 						if item.Description != "" {
-							<p class="text-sm text-gray-300 leading-relaxed">{ item.Description }</p>
+							<p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{ item.Description }</p>
 						}
 						if item.Content != nil {
 							<div class="mt-3">

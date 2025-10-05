@@ -11,14 +11,8 @@ type Project struct {
 	Slug string
 }
 
-// SidebarItem represents a single sidebar navigation item
-type SidebarItem struct {
-	Label  string
-	Href   string
-	Icon   templ.Component
-	Active bool
-	Badge  string
-}
+// SidebarItem is an alias for MenuItem for backward compatibility
+type SidebarItem = MenuItem
 
 // Sidebar - Responsive sidebar component
 // Desktop: Fixed sidebar on the left
@@ -29,7 +23,7 @@ templ Sidebar(items []SidebarItem, userName string, userEmail string, userAvatar
 		<div class="lg:hidden fixed top-4 left-4 z-50">
 			<button
 				@click="mobileOpen = !mobileOpen"
-				class="p-2 rounded-md bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+				class="p-2 rounded-md bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
 			>
 				@IconMenu()
 			</button>
@@ -63,69 +57,46 @@ templ Sidebar(items []SidebarItem, userName string, userEmail string, userAvatar
 				x-transition:leave-end="-translate-x-full"
 				class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-xl border-r border-gray-200 dark:border-gray-700"
 			>
-				@SidebarContent(items, true, userName, userEmail, userAvatar, currentProject, projects)
+				@SidebarContent(items, true, userName, userEmail, userAvatar)
 			</div>
 		</div>
 
 		<!-- Desktop Sidebar -->
 		<aside class="hidden lg:block fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-30">
-			@SidebarContent(items, false, userName, userEmail, userAvatar, currentProject, projects)
+			@SidebarContent(items, false, userName, userEmail, userAvatar)
 		</aside>
 	</div>
 }
 
 // SidebarContent - The actual sidebar content (shared between mobile and desktop)
-templ SidebarContent(items []SidebarItem, isMobile bool, userName string, userEmail string, userAvatar string, currentProject Project, projects []Project) {
+templ SidebarContent(items []SidebarItem, isMobile bool, userName string, userEmail string, userAvatar string) {
 	<div class="flex flex-col h-full">
 		<!-- Logo/Header -->
-		<div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-			<h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">OmniKit</h1>
-			if isMobile {
-				<button
-					@click="mobileOpen = false"
-					class="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 transition-colors lg:hidden"
-				>
-					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-					</svg>
-				</button>
-			}
-		</div>
-		<!-- Project Selector -->
-		<div class="px-4 py-4 border-b border-gray-200 dark:border-gray-700">
-			@ProjectSelector(currentProject, projects)
+		<div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+			<div class="flex items-center justify-between">
+				<div class="flex items-center gap-2">
+					<h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Lite UI</h1>
+					<span class="text-xs px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 rounded-full font-semibold">DEMO</span>
+				</div>
+				if isMobile {
+					<button
+						@click="mobileOpen = false"
+						class="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 transition-colors lg:hidden"
+					>
+						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+						</svg>
+					</button>
+				}
+			</div>
 		</div>
 		<!-- Navigation Items -->
-		<nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-			for _, item := range items {
-				<a
-					href={ templ.URL(item.Href) }
-					hx-get={ item.Href }
-					hx-target="body"
-					hx-swap="outerHTML transition:true"
-					hx-push-url="true"
-					if isMobile {
-						@click="mobileOpen = false"
-					}
-					class={
-						"flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors cursor-pointer",
-						templ.KV("bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400", item.Active),
-						templ.KV("text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700", !item.Active),
-					}
-				>
-					if item.Icon != nil {
-						<div class="w-5 h-5">
-							@item.Icon
-						</div>
-					}
-					<span>{ item.Label }</span>
-					if item.Badge != "" {
-						<span class="ml-auto px-2 py-0.5 text-xs font-semibold rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400">
-							{ item.Badge }
-						</span>
-					}
-				</a>
+		<nav class="flex-1 px-4 py-6 overflow-y-auto"
+			if isMobile {
+				@click="mobileOpen = false"
 			}
+		>
+			@Menu(items, "vertical")
 		</nav>
 
 		<!-- Footer (optional) -->

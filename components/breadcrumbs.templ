@@ -1,0 +1,43 @@
+package components
+
+// Breadcrumb represents a single breadcrumb item
+type Breadcrumb struct {
+	Label string
+	Href  string
+}
+
+// Breadcrumbs - Breadcrumb navigation component
+templ Breadcrumbs(items []Breadcrumb) {
+	<nav aria-label="Breadcrumb" class="flex">
+		<ol class="inline-flex items-center space-x-1 md:space-x-3">
+			for i, item := range items {
+				<li class="inline-flex items-center">
+					if i > 0 {
+						<svg class="w-3 h-3 text-gray-400 dark:text-gray-600 mx-1" fill="currentColor" viewBox="0 0 20 20">
+							<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+						</svg>
+					}
+					if i == len(items)-1 {
+						<span class="text-sm font-medium text-gray-500 dark:text-gray-400">{ item.Label }</span>
+					} else {
+						<a
+							href={ templ.URL(item.Href) }
+							hx-get={ item.Href }
+							hx-target="body"
+							hx-swap="outerHTML transition:true"
+							hx-push-url="true"
+							class="inline-flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+						>
+							if i == 0 {
+								<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+									<path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+								</svg>
+							}
+							{ item.Label }
+						</a>
+					}
+				</li>
+			}
+		</ol>
+	</nav>
+}

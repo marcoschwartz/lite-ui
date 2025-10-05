@@ -1,0 +1,20 @@
+package components
+
+// Divider - Visual separator component
+// Variant: horizontal, vertical
+// WithText: optional text in the middle
+templ Divider(variant string, text string) {
+	if variant == "vertical" {
+		<div class="inline-block h-full w-px bg-gray-200 dark:bg-gray-700"></div>
+	} else {
+		if text != "" {
+			<div class="relative flex items-center py-4">
+				<div class="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
+				<span class="flex-shrink mx-4 text-sm text-gray-500 dark:text-gray-400 font-medium">{ text }</span>
+				<div class="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
+			</div>
+		} else {
+			<hr class="border-gray-200 dark:border-gray-700"/>
+		}
+	}
+}

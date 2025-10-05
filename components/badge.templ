@@ -2,9 +2,18 @@ package components
 
 // Badge - Colored badge component
 // Colors: gray, red, yellow, green, blue, indigo, purple, pink
-// Variants: solid, outline
 templ Badge(text string, color string) {
-	<span class={ "px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-" + color + "-100 dark:bg-" + color + "-900 text-" + color + "-800 dark:text-" + color + "-200" }>
+	<span class={
+		"px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
+		templ.KV("bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200", color == "gray"),
+		templ.KV("bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200", color == "red"),
+		templ.KV("bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200", color == "yellow"),
+		templ.KV("bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200", color == "green"),
+		templ.KV("bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200", color == "blue"),
+		templ.KV("bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200", color == "indigo"),
+		templ.KV("bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200", color == "purple"),
+		templ.KV("bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200", color == "pink"),
+	}>
 		{ text }
 	</span>
 }

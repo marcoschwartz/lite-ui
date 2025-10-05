@@ -1,0 +1,67 @@
+package components
+
+import "fmt"
+
+// AccordionItem represents a single accordion item
+type AccordionItem struct {
+	ID      string
+	Title   string
+	Content templ.Component
+}
+
+// Accordion - Accordion/Collapse component using Alpine.js
+// AllowMultiple: if true, multiple items can be open at once
+templ Accordion(items []AccordionItem, allowMultiple bool) {
+	<div
+		if allowMultiple {
+			x-data="{ openItems: [] }"
+		} else {
+			x-data="{ openItem: null }"
+		}
+		class="divide-y divide-gray-200 dark:divide-gray-700 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
+	>
+		for _, item := range items {
+			<div class="bg-white dark:bg-gray-800">
+				<!-- Header -->
+				<button
+					type="button"
+					if allowMultiple {
+						@click={ fmt.Sprintf("openItems.includes('%s') ? openItems = openItems.filter(i => i !== '%s') : openItems.push('%s')", item.ID, item.ID, item.ID) }
+						:aria-expanded={ fmt.Sprintf("openItems.includes('%s')", item.ID) }
+					} else {
+						@click={ fmt.Sprintf("openItem = openItem === '%s' ? null : '%s'", item.ID, item.ID) }
+						:aria-expanded={ fmt.Sprintf("openItem === '%s'", item.ID) }
+					}
+					class="flex items-center justify-between w-full px-6 py-4 text-left text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+				>
+					<span class="font-semibold">{ item.Title }</span>
+					<svg
+						if allowMultiple {
+							:class={ fmt.Sprintf("{ 'rotate-180': openItems.includes('%s') }", item.ID) }
+						} else {
+							:class={ fmt.Sprintf("{ 'rotate-180': openItem === '%s' }", item.ID) }
+						}
+						class="w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+					</svg>
+				</button>
+				<!-- Content -->
+				<div
+					if allowMultiple {
+						x-show={ fmt.Sprintf("openItems.includes('%s')", item.ID) }
+					} else {
+						x-show={ fmt.Sprintf("openItem === '%s'", item.ID) }
+					}
+					x-collapse
+					class="px-6 py-4 text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50"
+				>
+					@item.Content
+				</div>
+			</div>
+		}
+	</div>
+}

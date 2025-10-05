@@ -16,7 +16,7 @@ templ Button(text string, variant ButtonVariant, attrs templ.Attributes) {
 		class={
 			"inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-md shadow-sm transition-colors",
 			templ.KV("bg-indigo-600 text-white hover:bg-indigo-700", variant == ButtonPrimary),
-			templ.KV("bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50", variant == ButtonSecondary),
+			templ.KV("bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700", variant == ButtonSecondary),
 			templ.KV("bg-red-600 text-white hover:bg-red-700", variant == ButtonDanger),
 			templ.KV("bg-green-600 text-white hover:bg-green-700", variant == ButtonSuccess),
 			attrs["class"],
@@ -54,7 +54,7 @@ templ LoadingButton(text string, loadingText string, variant ButtonVariant, load
 		class={
 			"inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-md shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
 			templ.KV("bg-indigo-600 text-white hover:bg-indigo-700", variant == ButtonPrimary),
-			templ.KV("bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50", variant == ButtonSecondary),
+			templ.KV("bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700", variant == ButtonSecondary),
 			templ.KV("bg-red-600 text-white hover:bg-red-700", variant == ButtonDanger),
 			templ.KV("bg-green-600 text-white hover:bg-green-700", variant == ButtonSuccess),
 		}

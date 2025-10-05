@@ -1,0 +1,86 @@
+package components
+
+// MenuItem represents a single menu item
+type MenuItem struct {
+	Label  string
+	Href   string
+	Icon   templ.Component
+	Active bool
+	Badge  string
+}
+
+// Menu - Vertical or horizontal navigation menu
+templ Menu(items []MenuItem, variant string) {
+	<ul
+		class={
+			"menu",
+			templ.KV("space-y-1", variant == "vertical" || variant == ""),
+			templ.KV("flex flex-row gap-2", variant == "horizontal"),
+			templ.KV("space-y-0.5", variant == "compact"),
+		}
+	>
+		for _, item := range items {
+			@renderMenuItem(item)
+		}
+	</ul>
+}
+
+// renderMenuItem - Individual menu item
+templ renderMenuItem(item MenuItem) {
+	<li>
+		<a
+			href={ templ.URL(item.Href) }
+			hx-get={ item.Href }
+			hx-target="body"
+			hx-swap="outerHTML transition:true"
+			hx-push-url="true"
+			class={
+				"flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors cursor-pointer",
+				templ.KV("bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400", item.Active),
+				templ.KV("text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700", !item.Active),
+			}
+		>
+			if item.Icon != nil {
+				<div class="w-5 h-5 flex-shrink-0">
+					@item.Icon
+				</div>
+			}
+			<span class="flex-1">{ item.Label }</span>
+			if item.Badge != "" {
+				<span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400">
+					{ item.Badge }
+				</span>
+			}
+		</a>
+	</li>
+}
+
+// MenuDivider - Horizontal line separator between menu sections
+templ MenuDivider() {
+	<li class="my-2">
+		<hr class="border-gray-200 dark:border-gray-700"/>
+	</li>
+}
+
+// MenuSection - Grouped menu items with optional title
+templ MenuSection(title string, items []MenuItem) {
+	<li>
+		if title != "" {
+			<div class="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+				{ title }
+			</div>
+		}
+		<ul class="space-y-1">
+			for _, item := range items {
+				@renderMenuItem(item)
+			}
+		</ul>
+	</li>
+}
+
+// MenuTitle - Section title without items
+templ MenuTitle(title string) {
+	<li class="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+		{ title }
+	</li>
+}
