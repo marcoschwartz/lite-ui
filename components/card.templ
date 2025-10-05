@@ -28,14 +28,18 @@ templ Card(config CardConfig, content templ.Component) {
 					@config.HeaderAction
 				}
 			</div>
-			<div class={ templ.KV("p-6", config.Padding == "" || config.Padding == "default"), templ.KV("p-0", config.Padding == "none") }>
-				@content
-			</div>
+			if content != nil {
+				<div class={ templ.KV("p-6", config.Padding == "" || config.Padding == "default"), templ.KV("p-0", config.Padding == "none") }>
+					@content
+				</div>
+			}
 		} else {
 			<!-- Basic Card -->
-			<div class={ templ.KV("p-6", config.Padding == "" || config.Padding == "default"), templ.KV("p-0", config.Padding == "none") }>
-				@content
-			</div>
+			if content != nil {
+				<div class={ templ.KV("p-6", config.Padding == "" || config.Padding == "default"), templ.KV("p-0", config.Padding == "none") }>
+					@content
+				</div>
+			}
 		}
 	</div>
 }

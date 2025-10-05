@@ -25,7 +25,11 @@ templ Layout(title string) {
 			<script defer src="/static/js/alpine.min.js"></script>
 		</head>
 		<body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
-			@ui.Sidebar(SidebarItems(), "Demo User", "demo@example.com", "https://ui-avatars.com/api/?name=Demo+User&background=6366f1&color=fff", ui.Project{}, nil)
+			@ui.Sidebar(
+				SidebarHeader(),
+				SidebarContent(),
+				SidebarFooter(),
+			)
 			@ui.Navbar(EmptyLogo(), NavRight())
 			<main class="lg:ml-64 pt-16">
 				{ children... }
@@ -47,9 +51,102 @@ templ EmptyLogo() {
 	<div></div>
 }
 
-// NavRight component
+// NavRight component with advanced logic
 templ NavRight() {
-	@ui.DarkModeToggle()
+	<div class="flex items-center gap-4">
+		<!-- Notifications with badge -->
+		if hasNotifications() {
+			<button class="relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+				@ui.IconBell()
+				<span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+			</button>
+		}
+
+		<!-- Search with conditional rendering -->
+		<div class="hidden md:block">
+			@ui.TextInput("", "text", "search", "Search...", false, templ.Attributes{"class": "w-48"})
+		</div>
+
+
+		<!-- User menu with logic -->
+		if isUserLoggedIn() {
+			<div class="flex items-center gap-2">
+				@ui.Avatar("https://ui-avatars.com/api/?name=Demo+User&background=6366f1&color=fff", "Demo User", "sm")
+			</div>
+		} else {
+			@ui.Button("Sign In", ui.ButtonPrimary, templ.Attributes{})
+		}
+	</div>
+}
+
+// Helper functions for navbar logic
+func hasNotifications() bool {
+	return true // In real app, check actual notifications
+}
+
+func isUserLoggedIn() bool {
+	return true // In real app, check auth state
+}
+
+// SidebarHeader - Logo and branding
+templ SidebarHeader() {
+	<div class="flex items-center gap-2">
+		<h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Lite UI</h1>
+		<span class="text-xs px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 rounded-full font-semibold">DEMO</span>
+	</div>
+}
+
+// SidebarContent - Navigation and project selector with advanced logic
+templ SidebarContent() {
+	<div class="flex flex-col h-full">
+		<!-- Project Selector with conditional rendering -->
+		<div class="px-4">
+			if len(getProjects()) > 1 {
+				@ui.ProjectSelector(
+					ui.Project{ID: 1, Name: "Main Project", Slug: "main"},
+					getProjects(),
+				)
+			} else {
+				<div class="text-sm text-gray-500 dark:text-gray-400">No projects available</div>
+			}
+		</div>
+
+		<!-- Navigation Menu -->
+		<nav class="flex-1 px-4 py-6 overflow-y-auto">
+			@ui.Menu(SidebarItems(), "vertical")
+		</nav>
+
+		<!-- Additional custom section with logic -->
+		<div class="px-4 pb-4">
+			@ui.Card(ui.CardConfig{Variant: "stat", StatLabel: "Components", StatValue: getComponentCount(), StatIcon: ui.IconFolder(), StatColor: "indigo"}, nil)
+		</div>
+	</div>
+}
+
+// Helper functions for dynamic content
+func getProjects() []ui.Project {
+	return []ui.Project{
+		{ID: 1, Name: "Main Project", Slug: "main"},
+		{ID: 2, Name: "Development", Slug: "dev"},
+		{ID: 3, Name: "Production", Slug: "prod"},
+	}
+}
+
+func getComponentCount() string {
+	return "50+"
+}
+
+// SidebarFooter - User info
+templ SidebarFooter() {
+	<div class="px-4 py-4">
+		<div class="flex items-center gap-3 px-4 py-2">
+			@ui.Avatar("https://ui-avatars.com/api/?name=Demo+User&background=6366f1&color=fff", "Demo User", "sm")
+			<div class="flex-1 min-w-0">
+				<p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">Demo User</p>
+				<p class="text-xs text-gray-500 dark:text-gray-400 truncate">demo@example.com</p>
+			</div>
+		</div>
+	</div>
 }
 
 // SidebarItems returns navigation items

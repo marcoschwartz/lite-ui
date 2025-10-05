@@ -14,10 +14,11 @@ type Project struct {
 // SidebarItem is an alias for MenuItem for backward compatibility
 type SidebarItem = MenuItem
 
-// Sidebar - Responsive sidebar component
+// Sidebar - Responsive sidebar component with slot-based content
 // Desktop: Fixed sidebar on the left
 // Mobile: Collapsible drawer
-templ Sidebar(items []SidebarItem, userName string, userEmail string, userAvatar string, currentProject Project, projects []Project) {
+// Accepts: header (logo), content (navigation/custom), footer (user info)
+templ Sidebar(header templ.Component, content templ.Component, footer templ.Component) {
 	<div x-data="{ mobileOpen: false }" @resize.window="if (window.innerWidth >= 1024) mobileOpen = false">
 		<!-- Mobile Menu Button -->
 		<div class="lg:hidden fixed top-4 left-4 z-50">
@@ -57,31 +58,30 @@ templ Sidebar(items []SidebarItem, userName string, userEmail string, userAvatar
 				x-transition:leave-end="-translate-x-full"
 				class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-xl border-r border-gray-200 dark:border-gray-700"
 			>
-				@SidebarContent(items, true, userName, userEmail, userAvatar)
+				@SidebarContent(header, content, footer, true)
 			</div>
 		</div>
 
 		<!-- Desktop Sidebar -->
 		<aside class="hidden lg:block fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-30">
-			@SidebarContent(items, false, userName, userEmail, userAvatar)
+			@SidebarContent(header, content, footer, false)
 		</aside>
 	</div>
 }
 
 // SidebarContent - The actual sidebar content (shared between mobile and desktop)
-templ SidebarContent(items []SidebarItem, isMobile bool, userName string, userEmail string, userAvatar string) {
+templ SidebarContent(header templ.Component, content templ.Component, footer templ.Component, isMobile bool) {
 	<div class="flex flex-col h-full">
-		<!-- Logo/Header -->
+		<!-- Header Slot -->
 		<div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
 			<div class="flex items-center justify-between">
-				<div class="flex items-center gap-2">
-					<h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">Lite UI</h1>
-					<span class="text-xs px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 rounded-full font-semibold">DEMO</span>
+				<div class="flex-1">
+					@header
 				</div>
 				if isMobile {
 					<button
 						@click="mobileOpen = false"
-						class="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 transition-colors lg:hidden"
+						class="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 transition-colors lg:hidden ml-2"
 					>
 						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -90,25 +90,22 @@ templ SidebarContent(items []SidebarItem, isMobile bool, userName string, userEm
 				}
 			</div>
 		</div>
-		<!-- Navigation Items -->
-		<nav class="flex-1 px-4 py-6 overflow-y-auto"
+
+		<!-- Content Slot -->
+		<div class="flex-1 overflow-y-auto pt-4"
 			if isMobile {
 				@click="mobileOpen = false"
 			}
 		>
-			@Menu(items, "vertical")
-		</nav>
-
-		<!-- Footer (optional) -->
-		<div class="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
-			<div class="flex items-center gap-3 px-4 py-2">
-				@Avatar(userAvatar, userName, "sm")
-				<div class="flex-1 min-w-0">
-					<p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{ userName }</p>
-					<p class="text-xs text-gray-500 dark:text-gray-400 truncate">{ userEmail }</p>
-				</div>
-			</div>
+			@content
 		</div>
+
+		<!-- Footer Slot -->
+		if footer != nil {
+			<div class="border-t border-gray-200 dark:border-gray-700">
+				@footer
+			</div>
+		}
 	</div>
 }
 
