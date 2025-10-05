@@ -1,0 +1,51 @@
+package components
+
+import "fmt"
+
+// Stepper - Step indicator component
+templ Stepper(steps []Step, currentStep int) {
+	<div class="flex items-center justify-between">
+		for i, step := range steps {
+			<div class="flex items-center flex-1">
+				<!-- Step Circle -->
+				<div class="flex flex-col items-center">
+					<div class={
+						"flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all",
+						templ.KV("border-indigo-600 bg-indigo-600 text-white", i < currentStep),
+						templ.KV("border-indigo-600 bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400", i == currentStep),
+						templ.KV("border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-400 dark:text-gray-500", i > currentStep),
+					}>
+						if i < currentStep {
+							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+								<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+							</svg>
+						} else {
+							<span class="text-sm font-semibold">{ fmt.Sprintf("%d", i+1) }</span>
+						}
+					</div>
+					<div class="mt-2 text-xs font-medium text-center">
+						<span class={
+							templ.KV("text-indigo-600 dark:text-indigo-400", i <= currentStep),
+							templ.KV("text-gray-500 dark:text-gray-400", i > currentStep),
+						}>
+							{ step.Label }
+						</span>
+					</div>
+				</div>
+				<!-- Connector Line -->
+				if i < len(steps)-1 {
+					<div class={
+						"flex-1 h-0.5 mx-4 transition-all",
+						templ.KV("bg-indigo-600", i < currentStep),
+						templ.KV("bg-gray-300 dark:bg-gray-600", i >= currentStep),
+					}></div>
+				}
+			</div>
+		}
+	</div>
+}
+
+// Step represents a single step in the stepper
+type Step struct {
+	Label string
+}

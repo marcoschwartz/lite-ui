@@ -1,0 +1,17 @@
+package components
+
+// Navbar - Navigation bar component
+templ Navbar(logo templ.Component, rightContent templ.Component) {
+	<nav class="transition-colors">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="flex justify-between h-16">
+				<div class="flex items-center">
+					@logo
+				</div>
+				<div class="flex items-center space-x-4">
+					@rightContent
+				</div>
+			</div>
+		</div>
+	</nav>
+}

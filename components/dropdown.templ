@@ -1,0 +1,27 @@
+package components
+
+// Dropdown - Dropdown menu component with Alpine.js
+templ Dropdown(trigger templ.Component, items []DropdownItem) {
+	<div x-data="{ open: false }" class="relative">
+		<div @click="open = !open" @click.away="open = false">
+			@trigger
+		</div>
+		<div
+			x-show="open"
+			x-transition
+			class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10"
+		>
+			for _, item := range items {
+				<a href={ templ.URL(item.Href) } class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+					{ item.Label }
+				</a>
+			}
+		</div>
+	</div>
+}
+
+// DropdownItem represents a single dropdown menu item
+type DropdownItem struct {
+	Label string
+	Href  string
+}

@@ -1,0 +1,10 @@
+package components
+
+// Badge - Colored badge component
+// Colors: gray, red, yellow, green, blue, indigo, purple, pink
+// Variants: solid, outline
+templ Badge(text string, color string) {
+	<span class={ "px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-" + color + "-100 dark:bg-" + color + "-900 text-" + color + "-800 dark:text-" + color + "-200" }>
+		{ text }
+	</span>
+}

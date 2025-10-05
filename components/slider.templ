@@ -1,0 +1,25 @@
+package components
+
+import "fmt"
+
+// Slider - Range slider component
+templ Slider(name string, label string, min int, max int, value int, step int, attrs templ.Attributes) {
+	<div x-data={ fmt.Sprintf("{ value: %d }", value) }>
+		if label != "" {
+			<div class="flex justify-between mb-2">
+				<label class="text-sm font-medium text-gray-700 dark:text-gray-300">{ label }</label>
+				<span class="text-sm text-gray-500 dark:text-gray-400" x-text="value"></span>
+			</div>
+		}
+		<input
+			type="range"
+			name={ name }
+			min={ fmt.Sprintf("%d", min) }
+			max={ fmt.Sprintf("%d", max) }
+			step={ fmt.Sprintf("%d", step) }
+			x-model="value"
+			{ attrs... }
+			class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+		/>
+	</div>
+}

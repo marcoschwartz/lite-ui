@@ -1,0 +1,165 @@
+package components
+
+import (
+	"fmt"
+	"strconv"
+)
+
+// PaginationConfig represents pagination configuration
+type PaginationConfig struct {
+	CurrentPage int
+	TotalPages  int
+	TotalItems  int
+	PerPage     int
+	BasePath    string // e.g., "/users"
+}
+
+// Pagination - Reusable pagination component
+templ Pagination(config PaginationConfig) {
+	<div class="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+		<!-- Results info -->
+		<div class="text-sm text-gray-600 dark:text-gray-400">
+			Showing
+			<span class="font-medium text-gray-900 dark:text-gray-100">
+				{ strconv.Itoa((config.CurrentPage - 1) * config.PerPage + 1) }
+			</span>
+			to
+			<span class="font-medium text-gray-900 dark:text-gray-100">
+				{ strconv.Itoa(min(config.CurrentPage * config.PerPage, config.TotalItems)) }
+			</span>
+			of
+			<span class="font-medium text-gray-900 dark:text-gray-100">
+				{ strconv.Itoa(config.TotalItems) }
+			</span>
+			results
+		</div>
+		<!-- Pagination buttons -->
+		<div class="flex items-center gap-2">
+			<!-- Previous button -->
+			if config.CurrentPage > 1 {
+				<a
+					href={ templ.URL(fmt.Sprintf("%s?page=%d", config.BasePath, config.CurrentPage-1)) }
+					hx-get={ fmt.Sprintf("%s?page=%d", config.BasePath, config.CurrentPage-1) }
+					hx-target="body"
+					hx-swap="outerHTML transition:true"
+					hx-push-url="true"
+					class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+				>
+					<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+					</svg>
+					Previous
+				</a>
+			} else {
+				<button
+					disabled
+					class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-400 dark:text-gray-600 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg cursor-not-allowed"
+				>
+					<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+					</svg>
+					Previous
+				</button>
+			}
+			<!-- Page numbers -->
+			<div class="hidden sm:flex items-center gap-1">
+				@renderPageNumbers(config)
+			</div>
+			<!-- Next button -->
+			if config.CurrentPage < config.TotalPages {
+				<a
+					href={ templ.URL(fmt.Sprintf("%s?page=%d", config.BasePath, config.CurrentPage+1)) }
+					hx-get={ fmt.Sprintf("%s?page=%d", config.BasePath, config.CurrentPage+1) }
+					hx-target="body"
+					hx-swap="outerHTML transition:true"
+					hx-push-url="true"
+					class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+				>
+					Next
+					<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+					</svg>
+				</a>
+			} else {
+				<button
+					disabled
+					class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-400 dark:text-gray-600 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg cursor-not-allowed"
+				>
+					Next
+					<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+					</svg>
+				</button>
+			}
+		</div>
+	</div>
+}
+
+// renderPageNumbers - Render page number buttons
+templ renderPageNumbers(config PaginationConfig) {
+	for page := range getPageRange(config) {
+		if page == config.CurrentPage {
+			<span class="inline-flex items-center justify-center w-10 h-10 text-sm font-semibold text-white bg-indigo-600 dark:bg-indigo-500 rounded-lg">
+				{ strconv.Itoa(page) }
+			</span>
+		} else {
+			<a
+				href={ templ.URL(fmt.Sprintf("%s?page=%d", config.BasePath, page)) }
+				hx-get={ fmt.Sprintf("%s?page=%d", config.BasePath, page) }
+				hx-target="body"
+				hx-swap="outerHTML transition:true"
+				hx-push-url="true"
+				class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+			>
+				{ strconv.Itoa(page) }
+			</a>
+		}
+	}
+}
+
+// Helper function to get page range
+func getPageRange(config PaginationConfig) []int {
+	// If no pages, return empty array
+	if config.TotalPages < 1 {
+		return []int{}
+	}
+
+	maxVisible := 7
+	startPage := 1
+	endPage := config.TotalPages
+
+	if config.TotalPages > maxVisible {
+		halfVisible := maxVisible / 2
+		if config.CurrentPage <= halfVisible {
+			endPage = maxVisible
+		} else if config.CurrentPage >= config.TotalPages-halfVisible {
+			startPage = config.TotalPages - maxVisible + 1
+		} else {
+			startPage = config.CurrentPage - halfVisible
+			endPage = config.CurrentPage + halfVisible
+		}
+	}
+
+	// Ensure startPage is at least 1
+	if startPage < 1 {
+		startPage = 1
+	}
+	// Ensure endPage doesn't exceed totalPages
+	if endPage > config.TotalPages {
+		endPage = config.TotalPages
+	}
+
+	pages := make([]int, 0, endPage-startPage+1)
+	for page := startPage; page <= endPage; page++ {
+		pages = append(pages, page)
+	}
+	return pages
+}
+
+// Helper function to get minimum of two integers
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}

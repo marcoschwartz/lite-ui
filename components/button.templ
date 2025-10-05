@@ -1,0 +1,71 @@
+package components
+
+// ButtonVariant defines button style variants
+type ButtonVariant string
+
+const (
+	ButtonPrimary   ButtonVariant = "primary"
+	ButtonSecondary ButtonVariant = "secondary"
+	ButtonDanger    ButtonVariant = "danger"
+	ButtonSuccess   ButtonVariant = "success"
+)
+
+// Button - Reusable button component with variants
+templ Button(text string, variant ButtonVariant, attrs templ.Attributes) {
+	<button
+		class={
+			"inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-md shadow-sm transition-colors",
+			templ.KV("bg-indigo-600 text-white hover:bg-indigo-700", variant == ButtonPrimary),
+			templ.KV("bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50", variant == ButtonSecondary),
+			templ.KV("bg-red-600 text-white hover:bg-red-700", variant == ButtonDanger),
+			templ.KV("bg-green-600 text-white hover:bg-green-700", variant == ButtonSuccess),
+			attrs["class"],
+		}
+		{ attrs... }
+	>
+		{ text }
+	</button>
+}
+
+// ButtonWithIcon - Button with icon and text
+templ ButtonWithIcon(text string, icon templ.Component, variant ButtonVariant, attrs templ.Attributes) {
+	<button
+		{ attrs... }
+		class={
+			"inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-colors",
+			templ.KV("bg-indigo-600 text-white hover:bg-indigo-700", variant == ButtonPrimary),
+			templ.KV("bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600", variant == ButtonSecondary),
+			templ.KV("bg-red-600 text-white hover:bg-red-700", variant == ButtonDanger),
+			templ.KV("bg-green-600 text-white hover:bg-green-700", variant == ButtonSuccess),
+		}
+	>
+		if icon != nil {
+			@icon
+		}
+		{ text }
+	</button>
+}
+
+// LoadingButton - Button with loading state
+templ LoadingButton(text string, loadingText string, variant ButtonVariant, loadingVar string, attrs templ.Attributes) {
+	<button
+		{ attrs... }
+		x-bind:disabled={ loadingVar }
+		class={
+			"inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-md shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+			templ.KV("bg-indigo-600 text-white hover:bg-indigo-700", variant == ButtonPrimary),
+			templ.KV("bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50", variant == ButtonSecondary),
+			templ.KV("bg-red-600 text-white hover:bg-red-700", variant == ButtonDanger),
+			templ.KV("bg-green-600 text-white hover:bg-green-700", variant == ButtonSuccess),
+		}
+	>
+		<span x-show={ "!" + loadingVar }>{ text }</span>
+		<span x-show={ loadingVar } class="flex items-center">
+			<svg class="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
+				<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+				<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+			</svg>
+			{ loadingText }
+		</span>
+	</button>
+}

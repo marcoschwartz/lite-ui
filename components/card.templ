@@ -1,0 +1,58 @@
+package components
+
+// Card - Unified card component with optional header and variants
+// Usage:
+//   Basic: @ui.Card(CardConfig{}, content)
+//   With Header: @ui.Card(CardConfig{Title: "Title", HeaderAction: action}, content)
+//   Stat Card: @ui.Card(CardConfig{Variant: "stat", StatLabel: "Users", StatValue: "1,234", StatIcon: icon, StatColor: "indigo"}, nil)
+templ Card(config CardConfig, content templ.Component) {
+	<div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+		if config.Variant == "stat" {
+			<!-- Stat Card Layout -->
+			<div class="p-6">
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{ config.StatLabel }</p>
+						<p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-2">{ config.StatValue }</p>
+					</div>
+					<div class={ "w-12 h-12 rounded-full flex items-center justify-center bg-" + config.StatColor + "-100 dark:bg-" + config.StatColor + "-900" }>
+						@config.StatIcon
+					</div>
+				</div>
+			</div>
+		} else if config.Title != "" {
+			<!-- Card with Header -->
+			<div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+				<h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{ config.Title }</h2>
+				if config.HeaderAction != nil {
+					@config.HeaderAction
+				}
+			</div>
+			<div class={ templ.KV("p-6", config.Padding == "" || config.Padding == "default"), templ.KV("p-0", config.Padding == "none") }>
+				@content
+			</div>
+		} else {
+			<!-- Basic Card -->
+			<div class={ templ.KV("p-6", config.Padding == "" || config.Padding == "default"), templ.KV("p-0", config.Padding == "none") }>
+				@content
+			</div>
+		}
+	</div>
+}
+
+// CardConfig - Configuration for card component
+type CardConfig struct {
+	// Common
+	Padding string // "default", "none"
+
+	// Header variant
+	Title        string
+	HeaderAction templ.Component
+
+	// Stat variant
+	Variant   string // "stat" for stat card
+	StatLabel string
+	StatValue string
+	StatIcon  templ.Component
+	StatColor string // indigo, green, purple, pink, etc.
+}

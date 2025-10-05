@@ -1,0 +1,17 @@
+package components
+
+// Avatar - Avatar component
+// Size: sm, md, lg, xl
+templ Avatar(src string, alt string, size string) {
+	<img
+		src={ src }
+		alt={ alt }
+		class={
+			"rounded-full",
+			templ.KV("h-8 w-8", size == "sm"),
+			templ.KV("h-10 w-10", size == "md" || size == ""),
+			templ.KV("h-12 w-12", size == "lg"),
+			templ.KV("h-16 w-16", size == "xl"),
+		}
+	/>
+}

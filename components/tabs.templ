@@ -1,0 +1,48 @@
+package components
+
+import "fmt"
+
+// Tabs - Reusable tabs component with Alpine.js
+// Usage:
+//   @ui.Tabs("my-tabs", []ui.Tab{
+//     {ID: "tab1", Label: "Overview", Content: OverviewContent()},
+//     {ID: "tab2", Label: "Settings", Content: SettingsContent()},
+//   })
+templ Tabs(id string, tabs []Tab) {
+	<div
+		x-data={ fmt.Sprintf("{ activeTab: '%s' }", tabs[0].ID) }
+		class="w-full"
+	>
+		<!-- Tab Headers -->
+		<div class="border-b border-gray-200 dark:border-gray-700">
+			<nav class="-mb-px flex gap-6" aria-label="Tabs">
+				for _, tab := range tabs {
+					<button
+						type="button"
+						@click={ fmt.Sprintf("activeTab = '%s'", tab.ID) }
+						class="whitespace-nowrap border-b-2 py-3 px-1 text-sm font-medium transition-all"
+						x-bind:class={ fmt.Sprintf("activeTab === '%s' ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-500 hover:text-gray-700 dark:hover:text-gray-300'", tab.ID) }
+					>
+						{ tab.Label }
+					</button>
+				}
+			</nav>
+		</div>
+
+		<!-- Tab Panels -->
+		<div class="mt-6">
+			for _, tab := range tabs {
+				<div x-show={ fmt.Sprintf("activeTab === '%s'", tab.ID) }>
+					@tab.Content
+				</div>
+			}
+		</div>
+	</div>
+}
+
+// Tab represents a single tab with its content
+type Tab struct {
+	ID      string
+	Label   string
+	Content templ.Component
+}

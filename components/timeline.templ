@@ -1,0 +1,52 @@
+package components
+
+// Timeline - Timeline component
+templ Timeline(items []TimelineItem) {
+	<div class="space-y-6">
+		for i, item := range items {
+			<div class="flex gap-4">
+				<!-- Left side: Icon with line -->
+				<div class="flex flex-col items-center">
+					<!-- Icon -->
+					<div class={ "flex items-center justify-center w-8 h-8 rounded-full bg-" + item.Color + "-500/10 text-" + item.Color + "-500 dark:text-" + item.Color + "-400 flex-shrink-0" }>
+						if item.Icon != nil {
+							@item.Icon
+						}
+					</div>
+					<!-- Vertical line (only show if not last item) -->
+					if i < len(items)-1 {
+						<div class="w-0.5 h-full mt-2 bg-gray-700 dark:bg-gray-600 flex-grow"></div>
+					}
+				</div>
+
+				<!-- Right side: Content -->
+				<div class="flex-1 pb-6">
+					<div class="bg-gray-800 dark:bg-gray-700/50 rounded-lg border border-gray-700 dark:border-gray-600 p-5 shadow-sm">
+						<div class="flex items-start justify-between gap-4 mb-2">
+							<h4 class="text-lg font-semibold text-white">{ item.Title }</h4>
+							<span class="text-xs text-gray-400 whitespace-nowrap mt-1">{ item.Time }</span>
+						</div>
+						if item.Description != "" {
+							<p class="text-sm text-gray-300 leading-relaxed">{ item.Description }</p>
+						}
+						if item.Content != nil {
+							<div class="mt-3">
+								@item.Content
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+}
+
+// TimelineItem represents a single timeline item
+type TimelineItem struct {
+	Title       string
+	Description string
+	Time        string
+	Color       string // indigo, green, blue, purple, pink, red, yellow
+	Icon        templ.Component
+	Content     templ.Component
+}
