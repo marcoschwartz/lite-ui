@@ -16,8 +16,8 @@ bin/
 # Go workspace file
 go.work
 
-# Templ generated files
-*_templ.go
+# Templ generated files (only for demo app)
+examples/demo-app/**/*_templ.go
 
 # Node modules
 node_modules/
