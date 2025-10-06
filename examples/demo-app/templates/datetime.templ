@@ -20,6 +20,11 @@ templ DateTimePage() {
 				</div>
 			</div>
 
+			<!-- Form Submission Example -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Form Submission Example"}, FormSubmissionDemo())
+			</div>
+
 			<!-- Calendar Picker -->
 			<div class="mb-8">
 				<h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Calendar Picker</h2>
@@ -123,6 +128,33 @@ templ WeekPickerDemo() {
 		@ui.DatePicker("Select Week", "week-picker", "", "week", false, templ.Attributes{})
 		<div class="text-xs text-gray-500 dark:text-gray-400">
 			Select a week of the year
+		</div>
+	</div>
+}
+
+templ FormSubmissionDemo() {
+	<div x-data="{ formData: null }">
+		<form @submit.prevent="formData = Object.fromEntries(new FormData($el))" class="space-y-4">
+			@ui.TextInput("Task Name", "text", "task_name", "Enter task name", true, templ.Attributes{})
+			@ui.DatePicker("Deadline", "deadline", "", "date", true, templ.Attributes{})
+			@ui.DatePicker("Meeting Time", "meeting_time", "", "time", false, templ.Attributes{})
+			@ui.DatePicker("Appointment", "appointment", "", "datetime-local", false, templ.Attributes{})
+
+			<div class="flex gap-3">
+				@ui.Button("Submit Form", ui.ButtonPrimary, templ.Attributes{"type": "submit"})
+				<button type="button" @click="formData = null" class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600">
+					Clear Results
+				</button>
+			</div>
+		</form>
+
+		<!-- Display submitted values -->
+		<div x-show="formData" x-cloak class="mt-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+			<h4 class="text-sm font-semibold text-green-900 dark:text-green-100 mb-3">✓ Form Submitted Successfully</h4>
+			<pre class="text-xs text-green-800 dark:text-green-200 overflow-x-auto" x-text="JSON.stringify(formData, null, 2)"></pre>
+			<p class="text-xs text-green-700 dark:text-green-300 mt-3">
+				All DatePicker values are properly captured and ready for submission!
+			</p>
 		</div>
 	</div>
 }

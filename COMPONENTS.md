@@ -575,17 +575,17 @@ templ UserRows() {
 
 ### Pagination
 
-Full-featured pagination component.
+Full-featured pagination component with HTMX support.
 
 **API**
 
 ```go
 type PaginationConfig struct {
-    CurrentPage int
-    TotalPages  int
-    TotalItems  int
-    PerPage     int
-    BasePath    string // e.g., "/users"
+    CurrentPage int    // Current page (1-indexed)
+    TotalPages  int    // Total number of pages
+    TotalItems  int    // Total number of items
+    PerPage     int    // Items per page
+    BasePath    string // Base URL path (e.g., "/users")
 }
 
 templ Pagination(config PaginationConfig)
@@ -602,6 +602,13 @@ templ Pagination(config PaginationConfig)
     BasePath:    "/users",
 })
 ```
+
+**Features**
+- Page numbers display correctly (1, 2, 3... not 0, 1, 2)
+- Smart page range with ellipsis for large page counts
+- HTMX integration for SPA-like navigation
+- Previous/Next buttons with disabled states
+- Responsive design
 
 ---
 
@@ -1060,16 +1067,17 @@ templ Breadcrumbs(items []BreadcrumbItem)
 
 ### DatePicker
 
-Date picker component.
+Date, time, and datetime picker with custom UI.
 
 **API**
 
 ```go
 templ DatePicker(
-    label string,
-    name string,
-    value string,
-    required bool,
+    label string,       // Field label
+    name string,        // Form field name
+    value string,       // Initial value (YYYY-MM-DD, HH:MM, or YYYY-MM-DDTHH:MM)
+    inputType string,   // "date", "time", or "datetime-local"
+    required bool,      // Is field required
     attrs templ.Attributes,
 )
 ```
@@ -1077,7 +1085,25 @@ templ DatePicker(
 **Usage**
 
 ```go
-@ui.DatePicker("Select Date", "date", "", false, templ.Attributes{})
+// Date picker only
+@ui.DatePicker("Deadline", "deadline", "2025-10-15", "date", true, templ.Attributes{})
+
+// Time picker only
+@ui.DatePicker("Meeting Time", "meeting_time", "14:30", "time", false, templ.Attributes{})
+
+// Date and time picker
+@ui.DatePicker("Appointment", "appointment", "2025-10-15T14:30", "datetime-local", true, templ.Attributes{})
+```
+
+**Form Submission**
+
+The DatePicker properly submits values with forms (including HTMX):
+
+```go
+<form hx-post="/tasks">
+    @ui.DatePicker("Deadline", "deadline", "", "date", true, templ.Attributes{})
+    @ui.Button("Submit", ui.ButtonPrimary, templ.Attributes{"type": "submit"})
+</form>
 ```
 
 ---

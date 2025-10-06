@@ -25,21 +25,12 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 					fmt.Sprintf(`{
 						open: false,
 						selectedDate: '%s',
-						displayDate: '%s',
-						formatDate(dateStr) {
-							if (!dateStr) return '';
-							const d = new Date(dateStr);
+						get displayDate() {
+							if (!this.selectedDate) return 'Select a date';
+							const d = new Date(this.selectedDate);
 							return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-						},
-						init() {
-							if (this.selectedDate) {
-								this.displayDate = this.formatDate(this.selectedDate);
-							}
-							this.$watch('selectedDate', value => {
-								this.displayDate = this.formatDate(value);
-							});
 						}
-					}`, value, value),
+					}`, value),
 				}
 				class="relative"
 			>
@@ -52,7 +43,7 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 					type="button"
 					class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-left flex items-center justify-between"
 				>
-					<span x-text="displayDate || 'Select a date'" :class="!displayDate && 'text-gray-400 dark:text-gray-500'"></span>
+					<span x-text="displayDate" :class="!selectedDate && 'text-gray-400 dark:text-gray-500'"></span>
 					<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
 					</svg>
@@ -63,7 +54,7 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 					x-cloak
 					x-transition
 					class="absolute z-50 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
-					@date-selected.window="if ($event.detail.name === '{ name + \"_calendar\" }') { selectedDate = $event.detail.date; open = false; }"
+					@date-selected.window={ fmt.Sprintf("if ($event.detail.name === '%s_calendar') { selectedDate = $event.detail.date; open = false; }", name) }
 				>
 					@Calendar(name + "_calendar", value)
 				</div>
@@ -91,13 +82,12 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 							if (!this.hours || !this.minutes) return 'Select time';
 							return this.hours.padStart(2, '0') + ':' + this.minutes.padStart(2, '0') + ' ' + this.period;
 						},
-						updateTime() {
+						get timeValue() {
+							if (!this.hours || !this.minutes) return '';
 							let hour24 = parseInt(this.hours);
 							if (this.period === 'PM' && hour24 !== 12) hour24 += 12;
 							if (this.period === 'AM' && hour24 === 12) hour24 = 0;
-							const timeStr = String(hour24).padStart(2, '0') + ':' + this.minutes.padStart(2, '0');
-							document.getElementById('%s').value = timeStr;
-							document.getElementById('%s').dispatchEvent(new Event('change'));
+							return String(hour24).padStart(2, '0') + ':' + this.minutes.padStart(2, '0');
 						},
 						init() {
 							if ('%s') {
@@ -114,11 +104,11 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 								this.period = 'PM';
 							}
 						}
-					}`, get12Hours(value), getMinutes(value), getPeriod(value), name, name, value, value),
+					}`, get12Hours(value), getMinutes(value), getPeriod(value), value, value),
 				}
 				class="relative"
 			>
-				<input type="hidden" id={ name } name={ name } value={ value }/>
+				<input type="hidden" id={ name } name={ name } x-model="timeValue"/>
 				<button
 					@click="open = !open"
 					@click.away="open = false"
@@ -145,7 +135,7 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 								for i := 1; i <= 12; i++ {
 									<button
 										type="button"
-										@click={ fmt.Sprintf("hours = '%d'; updateTime()", i) }
+										@click={ fmt.Sprintf("hours = '%d'", i) }
 										:class={ fmt.Sprintf("hours === '%d' ? 'bg-indigo-500 text-white font-semibold' : 'hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100'", i) }
 										class="w-full px-4 py-2.5 text-base transition-colors"
 									>
@@ -161,7 +151,7 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 								for i := 0; i < 60; i += 5 {
 									<button
 										type="button"
-										@click={ fmt.Sprintf("minutes = '%02d'; updateTime()", i) }
+										@click={ fmt.Sprintf("minutes = '%02d'", i) }
 										:class={ fmt.Sprintf("minutes === '%02d' ? 'bg-indigo-500 text-white font-semibold' : 'hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100'", i) }
 										class="w-full px-4 py-2.5 text-base transition-colors"
 									>
@@ -175,7 +165,7 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 					<div class="flex gap-2 mt-4">
 						<button
 							type="button"
-							@click="period = 'AM'; updateTime()"
+							@click="period = 'AM'"
 							:class="period === 'AM' ? 'bg-indigo-500 text-white font-semibold' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'"
 							class="flex-1 px-4 py-2 rounded-lg transition-colors"
 						>
@@ -183,7 +173,7 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 						</button>
 						<button
 							type="button"
-							@click="period = 'PM'; updateTime()"
+							@click="period = 'PM'"
 							:class="period === 'PM' ? 'bg-indigo-500 text-white font-semibold' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'"
 							class="flex-1 px-4 py-2 rounded-lg transition-colors"
 						>
@@ -215,8 +205,8 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 				x-data={
 					fmt.Sprintf(`{
 						open: false,
-						selectedDate: '%s',
-						timeInput: '%s',
+						selectedDate: '',
+						timeInput: '12:00',
 						get displayDateTime() {
 							if (!this.selectedDate) return 'Select date and time';
 							const d = new Date(this.selectedDate);
@@ -224,29 +214,27 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 							const timeStr = this.timeInput || '12:00';
 							return dateStr + ' ' + timeStr;
 						},
-						updateDateTime() {
-							if (this.selectedDate && this.timeInput) {
-								const dateTimeStr = this.selectedDate + 'T' + this.timeInput;
-								document.getElementById('%s').value = dateTimeStr;
-								document.getElementById('%s').dispatchEvent(new Event('change'));
+						get dateTimeValue() {
+							const time = this.timeInput || '12:00';
+							if (this.selectedDate) {
+								return this.selectedDate + 'T' + time;
 							}
-						},
-						updateTimeFromInput() {
-							this.updateDateTime();
+							return '';
 						},
 						init() {
-							if ('%s') {
-								const parts = '%s'.split('T');
+							const val = '%s';
+							if (val && val.length > 0) {
+								const parts = val.split('T');
 								this.selectedDate = parts[0] || '';
 								this.timeInput = parts[1] ? parts[1].substring(0, 5) : '12:00';
 							}
 						}
-					}`, getDatePart(value), getTimePart(value), name, name, value, value),
+					}`, value),
 				}
 				class="relative"
 				@click.away="open = false"
 			>
-				<input type="hidden" id={ name } name={ name } value={ value }/>
+				<input type="hidden" id={ name } name={ name } x-model="dateTimeValue"/>
 				<button
 					@click="open = !open"
 					type="button"
@@ -264,7 +252,7 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 					x-transition
 					@click.stop
 					class="absolute z-50 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-6"
-					@date-selected.window={ fmt.Sprintf("if ($event.detail.name === '%s_date') { selectedDate = $event.detail.date; updateDateTime(); }", name) }
+					@date-selected.window={ fmt.Sprintf("if ($event.detail.name === '%s_date') { selectedDate = $event.detail.date; }", name) }
 				>
 					<div class="flex flex-col gap-4">
 						<!-- Calendar Section -->
@@ -276,7 +264,6 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 							<input
 								type="time"
 								x-model="timeInput"
-								@input="updateTimeFromInput()"
 								class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent [color-scheme:light] dark:[color-scheme:dark]"
 							/>
 							<button
