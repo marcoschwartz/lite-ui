@@ -1,0 +1,62 @@
+package components
+
+// ActionMenuItem represents a single action menu item
+type ActionMenuItem struct {
+	Label   string
+	Href    string
+	Danger  bool // Style as dangerous action (red)
+	Divider bool // Show divider before this item
+}
+
+// ActionMenu - Simple action menu for table rows and constrained contexts
+// Uses fixed positioning to avoid clipping issues
+templ ActionMenu(items []ActionMenuItem) {
+	<div
+		x-data="{ open: false, top: 0, right: 0 }"
+		@click.away="open = false"
+	>
+		<button
+			x-ref="trigger"
+			@click="
+				if (!open) {
+					const rect = $refs.trigger.getBoundingClientRect();
+					top = rect.bottom + 8;
+					right = window.innerWidth - rect.right;
+				}
+				open = !open;
+			"
+			type="button"
+			class="p-1 rounded-md text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+		>
+			@IconDotsVertical()
+		</button>
+		<div
+			x-cloak
+			x-show="open"
+			x-transition:enter="transition ease-out duration-100"
+			x-transition:enter-start="opacity-0 scale-95"
+			x-transition:enter-end="opacity-100 scale-100"
+			x-transition:leave="transition ease-in duration-75"
+			x-transition:leave-start="opacity-100 scale-100"
+			x-transition:leave-end="opacity-0 scale-95"
+			:style="{ position: 'fixed', top: top + 'px', right: right + 'px' }"
+			class="w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1 z-50 origin-top-right"
+		>
+			for _, item := range items {
+				if item.Divider {
+					<hr class="my-1 border-gray-200 dark:border-gray-700"/>
+				}
+				<a
+					href={ templ.URL(item.Href) }
+					class={
+						"block px-4 py-2 text-sm transition-colors",
+						templ.KV("text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700", !item.Danger),
+						templ.KV("text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700", item.Danger),
+					}
+				>
+					{ item.Label }
+				</a>
+			}
+		</div>
+	</div>
+}

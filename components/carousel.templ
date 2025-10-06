@@ -19,6 +19,7 @@ templ Carousel(id string, items []CarouselItem) {
 		<div class="relative overflow-hidden rounded-lg" style="aspect-ratio: 16/9;">
 			for i, item := range items {
 				<div
+					x-cloak
 					x-show={ "currentSlide === " + fmt.Sprint(i) }
 					x-transition:enter="transition ease-out duration-300"
 					x-transition:enter-start="opacity-0 transform translate-x-full"

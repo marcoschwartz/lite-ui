@@ -11,6 +11,7 @@ templ Tooltip(content string, position string, trigger templ.Component) {
 	>
 		@trigger
 		<div
+			x-cloak
 			x-show="show"
 			x-transition
 			class={

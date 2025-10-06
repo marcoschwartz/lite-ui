@@ -51,6 +51,7 @@ templ Accordion(items []AccordionItem, allowMultiple bool) {
 				</button>
 				<!-- Content -->
 				<div
+					x-cloak
 					if allowMultiple {
 						x-show={ fmt.Sprintf("openItems.includes('%s')", item.ID) }
 					} else {

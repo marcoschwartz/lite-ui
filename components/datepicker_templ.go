@@ -50,7 +50,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var2 string
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 17, Col: 12}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 17, Col: 12}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
@@ -96,7 +96,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 					}`, value, value),
 			)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 43, Col: 4}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 43, Col: 4}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -127,7 +127,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 75, Col: 12}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 75, Col: 12}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -188,7 +188,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 					}`, get12Hours(value), getMinutes(value), getPeriod(value), name, name, value, value),
 			)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 116, Col: 4}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 116, Col: 4}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -201,7 +201,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 119, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 119, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -214,7 +214,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 119, Col: 48}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 119, Col: 48}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -227,7 +227,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(value)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 119, Col: 64}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 119, Col: 64}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -245,7 +245,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("hours = '%d'; updateTime()", i))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 146, Col: 63}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 146, Col: 63}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
@@ -258,7 +258,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("hours === '%d' ? 'bg-indigo-500 text-white font-semibold' : 'hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100'", i))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 147, Col: 172}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 147, Col: 172}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -271,7 +271,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%02d", i))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 150, Col: 34}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 150, Col: 34}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 				if templ_7745c5c3_Err != nil {
@@ -294,7 +294,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var12 string
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("minutes = '%02d'; updateTime()", i))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 162, Col: 67}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 162, Col: 67}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
@@ -307,7 +307,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var13 string
 				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("minutes === '%02d' ? 'bg-indigo-500 text-white font-semibold' : 'hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100'", i))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 163, Col: 176}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 163, Col: 176}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 				if templ_7745c5c3_Err != nil {
@@ -320,7 +320,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var14 string
 				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%02d", i))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 166, Col: 34}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 166, Col: 34}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 				if templ_7745c5c3_Err != nil {
@@ -348,7 +348,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var15 string
 				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 206, Col: 12}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 206, Col: 12}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 				if templ_7745c5c3_Err != nil {
@@ -405,7 +405,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 					}`, getDatePart(value), getTimePart(value), name, name, value, value),
 			)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 243, Col: 4}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 243, Col: 4}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {
@@ -418,7 +418,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 			var templ_7745c5c3_Var17 string
 			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 247, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 247, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 			if templ_7745c5c3_Err != nil {
@@ -431,7 +431,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 			var templ_7745c5c3_Var18 string
 			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 247, Col: 48}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 247, Col: 48}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 			if templ_7745c5c3_Err != nil {
@@ -444,7 +444,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 			var templ_7745c5c3_Var19 string
 			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(value)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 247, Col: 64}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 247, Col: 64}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 			if templ_7745c5c3_Err != nil {
@@ -457,7 +457,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 			var templ_7745c5c3_Var20 string
 			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("if ($event.detail.name === '%s_date') { selectedDate = $event.detail.date; updateDateTime(); }", name))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 265, Col: 144}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 265, Col: 144}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 			if templ_7745c5c3_Err != nil {
@@ -488,7 +488,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var21 string
 				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 296, Col: 21}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 296, Col: 21}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 				if templ_7745c5c3_Err != nil {
@@ -501,7 +501,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var22 string
 				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 297, Col: 12}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 297, Col: 12}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 				if templ_7745c5c3_Err != nil {
@@ -524,7 +524,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var23 string
 				templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(inputType)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 303, Col: 21}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 303, Col: 21}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 				if templ_7745c5c3_Err != nil {
@@ -537,7 +537,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var24 string
 				templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 304, Col: 14}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 304, Col: 14}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 				if templ_7745c5c3_Err != nil {
@@ -550,7 +550,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var25 string
 				templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 305, Col: 16}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 305, Col: 16}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 				if templ_7745c5c3_Err != nil {
@@ -563,7 +563,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var26 string
 				templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(value)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 306, Col: 18}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 306, Col: 18}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 				if templ_7745c5c3_Err != nil {
@@ -599,7 +599,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var27 string
 				templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(inputType)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 316, Col: 20}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 316, Col: 20}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 				if templ_7745c5c3_Err != nil {
@@ -612,7 +612,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var28 string
 				templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 317, Col: 13}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 317, Col: 13}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 				if templ_7745c5c3_Err != nil {
@@ -625,7 +625,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var29 string
 				templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 318, Col: 15}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 318, Col: 15}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 				if templ_7745c5c3_Err != nil {
@@ -638,7 +638,7 @@ func DatePicker(label string, name string, value string, inputType string, requi
 				var templ_7745c5c3_Var30 string
 				templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(value)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/datepicker.templ`, Line: 319, Col: 17}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `datepicker.templ`, Line: 319, Col: 17}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 				if templ_7745c5c3_Err != nil {

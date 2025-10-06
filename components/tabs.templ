@@ -32,7 +32,7 @@ templ Tabs(id string, tabs []Tab) {
 		<!-- Tab Panels -->
 		<div class="mt-6">
 			for _, tab := range tabs {
-				<div x-show={ fmt.Sprintf("activeTab === '%s'", tab.ID) }>
+				<div x-cloak x-show={ fmt.Sprintf("activeTab === '%s'", tab.ID) }>
 					@tab.Content
 				</div>
 			}

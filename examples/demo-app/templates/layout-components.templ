@@ -116,7 +116,7 @@ templ DrawerContentDemo() {
 }
 
 templ TableDemo() {
-	@ui.Table([]string{"Name", "Email", "Role"}, TableRowsDemo())
+	@ui.Table([]string{"Name", "Email", "Role", "Actions"}, TableRowsDemo())
 }
 
 templ TableRowsDemo() {
@@ -124,11 +124,25 @@ templ TableRowsDemo() {
 		<td class="px-6 py-4 text-gray-900 dark:text-gray-100">John Doe</td>
 		<td class="px-6 py-4 text-gray-900 dark:text-gray-100">john@example.com</td>
 		<td class="px-6 py-4">@ui.Badge("Admin", "red")</td>
+		<td class="px-6 py-4">
+			@ui.ActionMenu([]ui.ActionMenuItem{
+				{Label: "Edit", Href: "#"},
+				{Label: "View Details", Href: "#"},
+				{Label: "Delete", Href: "#", Danger: true, Divider: true},
+			})
+		</td>
 	</tr>
 	<tr>
 		<td class="px-6 py-4 text-gray-900 dark:text-gray-100">Jane Smith</td>
 		<td class="px-6 py-4 text-gray-900 dark:text-gray-100">jane@example.com</td>
 		<td class="px-6 py-4">@ui.Badge("User", "blue")</td>
+		<td class="px-6 py-4">
+			@ui.ActionMenu([]ui.ActionMenuItem{
+				{Label: "Edit", Href: "#"},
+				{Label: "View Details", Href: "#"},
+				{Label: "Delete", Href: "#", Danger: true, Divider: true},
+			})
+		</td>
 	</tr>
 }
 

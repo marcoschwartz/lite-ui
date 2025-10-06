@@ -6,7 +6,7 @@ Built with [Templ](https://templ.guide/), [Tailwind CSS](https://tailwindcss.com
 
 ## Features
 
-✨ **24 Production-Ready Components** - Buttons, cards, forms, modals, tables, and more
+✨ **25 Production-Ready Components** - Buttons, cards, forms, modals, tables, and more
 🎨 **Tailwind CSS v4** - Modern utility-first styling with dark mode support
 ⚡ **HTMX Integration** - Smooth SPA-like experiences with server-side rendering
 🔧 **Type-Safe** - Full Go type safety with Templ
@@ -47,6 +47,7 @@ Built with [Templ](https://templ.guide/), [Tailwind CSS](https://tailwindcss.com
 
 ### Navigation
 - `Dropdown` - Dropdown menu
+- `ActionMenu` - Row action menu (for tables)
 
 ### Utilities
 - `DarkModeToggle` - Theme switcher
@@ -76,7 +77,18 @@ templ MyPage() {
 
 ### 2. Set Up Tailwind CSS
 
-Copy `static/css/input.css` to your project and configure Tailwind:
+Create an `input.css` file with the following content:
+
+```css
+@import "tailwindcss";
+
+/* Alpine.js x-cloak - Prevents flash of content before Alpine loads */
+[x-cloak] {
+	display: none !important;
+}
+```
+
+Configure Tailwind:
 
 ```javascript
 // tailwind.config.js
@@ -96,6 +108,8 @@ Build your CSS:
 ```bash
 npx @tailwindcss/cli -i ./static/css/input.css -o ./static/css/output.css --minify
 ```
+
+**Important:** The `[x-cloak]` CSS rule is required to prevent flashing of dropdowns, modals, and other Alpine.js components before the JavaScript loads.
 
 ### 3. Include HTMX and Alpine.js
 
@@ -186,6 +200,26 @@ func ToUIProject(p MyProject) ui.Project {
 })
 ```
 
+### Table with Action Menu
+
+Use the `ActionMenu` component for table row actions. It automatically handles positioning to avoid clipping:
+
+```go
+<tr>
+    <td class="px-6 py-4">John Doe</td>
+    <td class="px-6 py-4">john@example.com</td>
+    <td class="px-6 py-4">
+        @ui.ActionMenu([]ui.ActionMenuItem{
+            {Label: "Edit", Href: "/edit/1"},
+            {Label: "View Details", Href: "/view/1"},
+            {Label: "Delete", Href: "/delete/1", Danger: true, Divider: true},
+        })
+    </td>
+</tr>
+```
+
+The `ActionMenu` uses fixed positioning to prevent clipping by table containers.
+
 ## Component API
 
 ### Button
@@ -266,6 +300,19 @@ type PaginationConfig struct {
 templ Pagination(config PaginationConfig)
 ```
 
+### ActionMenu
+
+```go
+type ActionMenuItem struct {
+    Label   string
+    Href    string
+    Danger  bool // Style as dangerous action (red)
+    Divider bool // Show divider before this item
+}
+
+templ ActionMenu(items []ActionMenuItem)
+```
+
 ## Dark Mode
 
 Lite UI includes automatic dark mode support using Tailwind's dark mode classes.
@@ -290,7 +337,9 @@ Use the dark mode toggle component:
 
 ## Alpine.js Integration
 
-Lite UI includes built-in support for Alpine.js `x-cloak` to prevent content flashing before Alpine initializes. The `input.css` file already includes the necessary styles:
+Lite UI components use Alpine.js for interactivity and include `x-cloak` attributes to prevent content flashing before Alpine initializes.
+
+**Required CSS:** You must include this CSS rule in your stylesheet (see Setup step 2):
 
 ```css
 [x-cloak] {
@@ -298,7 +347,9 @@ Lite UI includes built-in support for Alpine.js `x-cloak` to prevent content fla
 }
 ```
 
-Components like Modal, Drawer, and Sidebar automatically use `x-cloak` to ensure smooth loading without visual flashing.
+**How it works:** Components with dropdown menus, modals, drawers, accordions, tabs, carousels, and tooltips use `x-cloak` to remain hidden until Alpine.js loads. This ensures a smooth, flash-free user experience.
+
+**Without this CSS rule:** Users will briefly see hidden content (dropdowns, modals, etc.) before Alpine.js initializes and hides them, creating an unpleasant visual flash.
 
 ## HTMX Integration
 
