@@ -1,0 +1,94 @@
+package components
+
+// Footer - Website footer component
+// Usage:
+//   @ui.Footer([]ui.FooterSection{...}, "© 2025 Company Name")
+
+type FooterSection struct {
+	Title string
+	Links []FooterLink
+}
+
+type FooterLink struct {
+	Label string
+	Href  string
+}
+
+// Footer - Multi-column footer
+templ Footer(sections []FooterSection, copyright string) {
+	<footer class="bg-gray-900 dark:bg-gray-950 text-gray-300">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+				for _, section := range sections {
+					<div>
+						<h3 class="text-white font-semibold mb-4">{ section.Title }</h3>
+						<ul class="space-y-2">
+							for _, link := range section.Links {
+								<li>
+									<a href={ templ.URL(link.Href) } class="hover:text-white transition-colors">
+										{ link.Label }
+									</a>
+								</li>
+							}
+						</ul>
+					</div>
+				}
+			</div>
+			<div class="border-t border-gray-800 pt-8">
+				<p class="text-center text-sm">{ copyright }</p>
+			</div>
+		</div>
+	</footer>
+}
+
+// FooterSimple - Simple single-line footer
+templ FooterSimple(copyright string, links []FooterLink) {
+	<footer class="bg-gray-900 dark:bg-gray-950 text-gray-300">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+			<div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+				<p class="text-sm">{ copyright }</p>
+				<div class="flex gap-6">
+					for _, link := range links {
+						<a href={ templ.URL(link.Href) } class="text-sm hover:text-white transition-colors">
+							{ link.Label }
+						</a>
+					}
+				</div>
+			</div>
+		</div>
+	</footer>
+}
+
+// FooterWithSocial - Footer with social media links
+templ FooterWithSocial(sections []FooterSection, copyright string, socialLinks templ.Component) {
+	<footer class="bg-gray-900 dark:bg-gray-950 text-gray-300">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+				for _, section := range sections {
+					<div>
+						<h3 class="text-white font-semibold mb-4">{ section.Title }</h3>
+						<ul class="space-y-2">
+							for _, link := range section.Links {
+								<li>
+									<a href={ templ.URL(link.Href) } class="hover:text-white transition-colors">
+										{ link.Label }
+									</a>
+								</li>
+							}
+						</ul>
+					</div>
+				}
+			</div>
+			<div class="border-t border-gray-800 pt-8">
+				<div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+					<p class="text-sm">{ copyright }</p>
+					if socialLinks != nil {
+						<div class="flex gap-4">
+							@socialLinks
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	</footer>
+}

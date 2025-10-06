@@ -31,7 +31,23 @@ templ FeedbackPage() {
 			<div class="mb-8">
 				@ui.Card(ui.CardConfig{Title: "Progress & Slider"}, ProgressSliderDemo())
 			</div>
+
+			<!-- Toast Notifications -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Toast Notifications"}, ToastDemo())
+			</div>
+
+			<!-- Skeleton Loaders -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Skeleton Loaders"}, SkeletonDemo())
+			</div>
+
+			<!-- Radial Progress -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Radial Progress"}, RadialProgressDemo())
+			</div>
 		</div>
+		@ui.ToastContainer()
 	}
 }
 
@@ -90,6 +106,92 @@ templ ProgressSliderDemo() {
 		<div>
 			<label class="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">Slider</label>
 			@ui.Slider("volume", "Volume", 0, 100, 50, 1, templ.Attributes{})
+		</div>
+	</div>
+}
+
+templ ToastDemo() {
+	<div class="space-y-4">
+		<p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Click buttons to show toast notifications:</p>
+		<div class="flex flex-wrap gap-2">
+			<button
+				onclick="window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: 'Operation successful!', variant: 'success' } }))"
+				class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+			>
+				Success Toast
+			</button>
+			<button
+				onclick="window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: 'An error occurred!', variant: 'error' } }))"
+				class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+			>
+				Error Toast
+			</button>
+			<button
+				onclick="window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: 'Warning: Please check your input.', variant: 'warning' } }))"
+				class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700"
+			>
+				Warning Toast
+			</button>
+			<button
+				onclick="window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: 'Here is some information.', variant: 'info' } }))"
+				class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+			>
+				Info Toast
+			</button>
+		</div>
+	</div>
+}
+
+templ SkeletonDemo() {
+	<div class="space-y-6">
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Text Skeleton</h3>
+			@ui.SkeletonText("md", 3)
+		</div>
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Circle (Avatar)</h3>
+			<div class="flex gap-4">
+				@ui.SkeletonCircle("sm")
+				@ui.SkeletonCircle("md")
+				@ui.SkeletonCircle("lg")
+				@ui.SkeletonCircle("xl")
+			</div>
+		</div>
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Box</h3>
+			@ui.SkeletonBox("200px", "100px")
+		</div>
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Card</h3>
+			@ui.SkeletonCard()
+		</div>
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Table</h3>
+			@ui.SkeletonTable(5)
+		</div>
+	</div>
+}
+
+templ RadialProgressDemo() {
+	<div class="space-y-6">
+		<p class="text-sm text-gray-600 dark:text-gray-400">Circular progress indicators in various sizes:</p>
+		<div class="flex flex-wrap items-center gap-8">
+			<div class="text-center">
+				@ui.RadialProgress(75, 100, "sm", "indigo", true)
+				<p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Small</p>
+			</div>
+			<div class="text-center">
+				@ui.RadialProgress(60, 100, "md", "blue", true)
+				<p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Medium</p>
+			</div>
+			<div class="text-center">
+				@ui.RadialProgress(85, 100, "lg", "green", true)
+				<p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Large</p>
+			</div>
+			<div class="text-center">
+				@ui.RadialProgress(45, 100, "xl", "red", true)
+				<p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Extra Large</p>
+			</div>
 		</div>
 	</div>
 }

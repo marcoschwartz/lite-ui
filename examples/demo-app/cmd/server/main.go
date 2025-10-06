@@ -49,6 +49,10 @@ func main() {
 		templates.DateTimePage().Render(r.Context(), w)
 	})
 
+	r.Get("/icons", func(w http.ResponseWriter, r *http.Request) {
+		templates.IconsPage().Render(r.Context(), w)
+	})
+
 	port := ":3058"
 	log.Printf("Starting server on http://localhost%s", port)
 	log.Fatal(http.ListenAndServe(port, r))

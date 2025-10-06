@@ -1,0 +1,71 @@
+package components
+
+import (
+	"fmt"
+	"strconv"
+)
+
+// RadialProgress - Circular progress indicator
+// Usage:
+//   @ui.RadialProgress(75, 100, "md", "indigo", true)
+
+// RadialProgress - Circular/radial progress indicator
+templ RadialProgress(value int, max int, size string, color string, showLabel bool) {
+	<div class="relative inline-flex items-center justify-center">
+		<svg
+			class={
+				templ.KV("w-16 h-16", size == "sm"),
+				templ.KV("w-24 h-24", size == "md" || size == ""),
+				templ.KV("w-32 h-32", size == "lg"),
+				templ.KV("w-40 h-40", size == "xl"),
+			}
+			viewBox="0 0 100 100"
+		>
+			<!-- Background circle -->
+			<circle
+				cx="50"
+				cy="50"
+				r="45"
+				fill="none"
+				class="stroke-gray-200 dark:stroke-gray-700"
+				stroke-width="10"
+			></circle>
+			<!-- Progress circle -->
+			<circle
+				cx="50"
+				cy="50"
+				r="45"
+				fill="none"
+				class={
+					"transition-all duration-500 ease-out",
+					templ.KV("stroke-indigo-600 dark:stroke-indigo-500", color == "indigo" || color == ""),
+					templ.KV("stroke-green-600 dark:stroke-green-500", color == "green"),
+					templ.KV("stroke-blue-600 dark:stroke-blue-500", color == "blue"),
+					templ.KV("stroke-red-600 dark:stroke-red-500", color == "red"),
+					templ.KV("stroke-yellow-600 dark:stroke-yellow-500", color == "yellow"),
+					templ.KV("stroke-purple-600 dark:stroke-purple-500", color == "purple"),
+				}
+				stroke-width="10"
+				stroke-linecap="round"
+				stroke-dasharray={ fmt.Sprintf("%f", 283.0) }
+				stroke-dashoffset={ fmt.Sprintf("%f", 283.0-(283.0*float64(value)/float64(max))) }
+				transform="rotate(-90 50 50)"
+			></circle>
+		</svg>
+		if showLabel {
+			<div class="absolute inset-0 flex items-center justify-center">
+				<span
+					class={
+						"font-bold text-gray-900 dark:text-gray-100",
+						templ.KV("text-base", size == "sm"),
+						templ.KV("text-xl", size == "md" || size == ""),
+						templ.KV("text-2xl", size == "lg"),
+						templ.KV("text-3xl", size == "xl"),
+					}
+				>
+					{ strconv.Itoa(value * 100 / max) }%
+				</span>
+			</div>
+		}
+	</div>
+}

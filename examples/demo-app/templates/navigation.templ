@@ -42,7 +42,13 @@ templ NavigationPage() {
 				@ui.Card(ui.CardConfig{Title: "Dropdown"}, DropdownDemo())
 				@ui.Card(ui.CardConfig{Title: "Navbar"}, NavbarPreview())
 			</div>
+
+			<!-- FAB & Speed Dial -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Floating Action Buttons"}, FABDemo())
+			</div>
 		</div>
+		@ui.SpeedDial(GetSpeedDialActions())
 	}
 }
 
@@ -333,7 +339,7 @@ templ MenuSectionsDemo() {
 		@ui.MenuTitle("Main")
 		@ui.Menu([]ui.MenuItem{
 			{Label: "Dashboard", Href: "#", Icon: ui.IconHome(), Active: true},
-			{Label: "Analytics", Href: "#", Icon: ui.IconChart()},
+			{Label: "Analytics", Href: "#", Icon: ui.IconChart("gray")},
 		}, "vertical")
 
 		@ui.MenuDivider()
@@ -349,4 +355,46 @@ templ MenuSectionsDemo() {
 
 templ NavbarPreview() {
 	<p class="text-sm text-gray-600 dark:text-gray-400">See the navbar at the top of this page for a live example.</p>
+}
+
+templ FABDemo() {
+	<div class="space-y-6">
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Simple FAB</h3>
+			<p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+				A single floating action button (note: the FAB component uses fixed positioning).
+			</p>
+			<div class="relative h-32 bg-gray-100 dark:bg-gray-800 rounded-lg">
+				<div class="absolute bottom-4 right-4">
+					@ui.FAB(ui.IconPlus(), templ.Attributes{})
+				</div>
+			</div>
+		</div>
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Speed Dial (Live)</h3>
+			<p class="text-sm text-gray-600 dark:text-gray-400">
+				See the speed dial in the bottom-right corner of this page (click to expand).
+			</p>
+		</div>
+	</div>
+}
+
+func GetSpeedDialActions() []ui.SpeedDialAction {
+	return []ui.SpeedDialAction{
+		{
+			Label: "Create New",
+			Icon:  ui.IconPlus(),
+			Attrs: templ.Attributes{"onclick": "alert('Create new item')"},
+		},
+		{
+			Label: "Settings",
+			Icon:  ui.IconSettings(),
+			Attrs: templ.Attributes{"onclick": "alert('Open settings')"},
+		},
+		{
+			Label: "Help",
+			Icon:  ui.IconHome(),
+			Attrs: templ.Attributes{"onclick": "alert('Show help')"},
+		},
+	}
 }

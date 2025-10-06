@@ -1,0 +1,33 @@
+package components
+
+// Kbd - Keyboard shortcut display
+// Usage:
+//   @ui.Kbd("Ctrl")
+//   @ui.KbdCombo([]string{"Ctrl", "Shift", "P"})
+
+// Kbd - Single key display
+templ Kbd(key string) {
+	<kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-sm">
+		{ key }
+	</kbd>
+}
+
+// KbdCombo - Keyboard shortcut combination
+templ KbdCombo(keys []string) {
+	<div class="inline-flex items-center gap-1">
+		for i, key := range keys {
+			@Kbd(key)
+			if i < len(keys)-1 {
+				<span class="text-gray-400 dark:text-gray-500 text-sm">+</span>
+			}
+		}
+	</div>
+}
+
+// KbdHelp - Keyboard shortcut help text
+templ KbdHelp(description string, keys []string) {
+	<div class="flex items-center justify-between py-2">
+		<span class="text-sm text-gray-700 dark:text-gray-300">{ description }</span>
+		@KbdCombo(keys)
+	</div>
+}

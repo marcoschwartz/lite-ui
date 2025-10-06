@@ -1,0 +1,79 @@
+package components
+
+// Hero - Hero section with title, description, and CTA
+// Usage:
+//   @ui.Hero("Welcome to Lite UI", "Build beautiful web apps with Go and Templ", HeroActions(), "")
+
+// Hero - Full-width hero section
+templ Hero(title string, description string, actions templ.Component, backgroundImage string) {
+	<div
+		class="relative bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-800 dark:to-purple-800"
+		if backgroundImage != "" {
+			style={ templ.SafeCSS("background-image: url('" + backgroundImage + "'); background-size: cover; background-position: center;") }
+		}
+	>
+		if backgroundImage != "" {
+			<div class="absolute inset-0 bg-black/50"></div>
+		}
+		<div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
+			<div class="text-center">
+				<h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6">
+					{ title }
+				</h1>
+				<p class="text-xl sm:text-2xl text-indigo-100 dark:text-indigo-200 mb-8 max-w-3xl mx-auto">
+					{ description }
+				</p>
+				if actions != nil {
+					<div class="flex flex-col sm:flex-row gap-4 justify-center">
+						@actions
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+}
+
+// HeroWithImage - Hero with side image
+templ HeroWithImage(title string, description string, actions templ.Component, imageUrl string) {
+	<div class="bg-white dark:bg-gray-900">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+				<div>
+					<h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+						{ title }
+					</h1>
+					<p class="text-xl text-gray-600 dark:text-gray-400 mb-8">
+						{ description }
+					</p>
+					if actions != nil {
+						<div class="flex flex-col sm:flex-row gap-4">
+							@actions
+						</div>
+					}
+				</div>
+				<div class="relative">
+					<img src={ imageUrl } alt={ title } class="rounded-lg shadow-2xl w-full h-auto"/>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+// HeroMinimal - Minimal hero without background
+templ HeroMinimal(title string, description string, actions templ.Component) {
+	<div class="bg-white dark:bg-gray-900">
+		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+			<h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+				{ title }
+			</h1>
+			<p class="text-xl text-gray-600 dark:text-gray-400 mb-8">
+				{ description }
+			</p>
+			if actions != nil {
+				<div class="flex flex-col sm:flex-row gap-4 justify-center">
+					@actions
+				</div>
+			}
+		</div>
+	</div>
+}

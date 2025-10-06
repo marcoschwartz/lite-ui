@@ -1,0 +1,51 @@
+package templates
+
+import ui "github.com/marcoschwartz/lite-ui/components"
+
+templ IconsPage() {
+	@Layout("Icons") {
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+			<h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">Icons</h1>
+
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Available Icons"}, IconsGrid())
+			</div>
+		</div>
+	}
+}
+
+templ IconsGrid() {
+	<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+		<!-- Icons with color parameter -->
+		@IconItem("IconUsers", ui.IconUsers("indigo"))
+		@IconItem("IconCheck", ui.IconCheck("green"))
+		@IconItem("IconCurrency", ui.IconCurrency("emerald"))
+		@IconItem("IconTrending", ui.IconTrending("blue"))
+		@IconItem("IconChart", ui.IconChart("purple"))
+
+		<!-- Icons without color parameter -->
+		@IconItem("IconPlus", ui.IconPlus())
+		@IconItem("IconChevronDown", ui.IconChevronDown())
+		@IconItem("IconDotsVertical", ui.IconDotsVertical())
+		@IconItem("IconCheckCircle", ui.IconCheckCircle())
+		@IconItem("IconClock", ui.IconClock())
+		@IconItem("IconBell", ui.IconBell())
+		@IconItem("IconMenu", ui.IconMenu())
+		@IconItem("IconHome", ui.IconHome())
+		@IconItem("IconFolder", ui.IconFolder())
+		@IconItem("IconSettings", ui.IconSettings())
+		@IconItem("IconCpu", ui.IconCpu())
+		@IconItem("IconCommand", ui.IconCommand())
+		@IconItem("IconWifi", ui.IconWifi())
+		@IconItem("IconX", ui.IconX())
+	</div>
+}
+
+templ IconItem(name string, icon templ.Component) {
+	<div class="flex flex-col items-center justify-center p-6 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-lg transition-shadow bg-white dark:bg-gray-800">
+		<div class="mb-3 text-gray-700 dark:text-gray-300">
+			@icon
+		</div>
+		<p class="text-sm font-medium text-gray-900 dark:text-gray-100 text-center">{ name }</p>
+	</div>
+}

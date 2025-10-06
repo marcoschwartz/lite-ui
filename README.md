@@ -1,12 +1,15 @@
 # Lite UI
 
+[![Go](https://img.shields.io/badge/Go-1.23+-00ADD8?logo=go)](https://golang.org/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 A lightweight, independent UI component library for Go + Templ applications.
 
 Built with [Templ](https://templ.guide/), [Tailwind CSS](https://tailwindcss.com/), [HTMX](https://htmx.org/), and [Alpine.js](https://alpinejs.dev/).
 
 ## Features
 
-✨ **41 Production-Ready Components** - Complete UI toolkit for modern web apps
+✨ **51 Production-Ready Components** - Complete UI toolkit for modern web apps
 🎨 **Tailwind CSS v4** - Modern utility-first styling with dark mode
 ⚡ **HTMX Integration** - Smooth SPA-like experiences
 🔧 **Type-Safe** - Full Go type safety with Templ
@@ -16,7 +19,7 @@ Built with [Templ](https://templ.guide/), [Tailwind CSS](https://tailwindcss.com
 
 ## Quick Links
 
-- 📖 **[Component Reference](COMPONENTS.md)** - Complete API documentation for all 41 components
+- 📖 **[Component Reference](COMPONENTS.md)** - Complete API documentation for all 51 components
 - 🎨 **[Live Demo](examples/demo-app)** - Interactive component examples
 - 🚀 **[Quick Start](#quick-start)** - Get started in minutes
 

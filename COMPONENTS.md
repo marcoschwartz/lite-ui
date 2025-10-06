@@ -24,6 +24,9 @@ Complete API documentation for all Lite UI components.
   - [Drawer](#drawer)
   - [Tabs](#tabs)
   - [Divider](#divider)
+  - [Hero](#hero)
+  - [Footer](#footer)
+  - [Collapse](#collapse)
 - [Data Display](#data-display)
   - [Table](#table)
   - [Pagination](#pagination)
@@ -36,11 +39,15 @@ Complete API documentation for all Lite UI components.
   - [Carousel](#carousel)
   - [Calendar](#calendar)
   - [EventCalendar](#eventcalendar)
+  - [ChatBubble](#chatbubble)
 - [Feedback](#feedback)
   - [Alert](#alert)
   - [Progress](#progress)
   - [Loading](#loading)
   - [Tooltip](#tooltip)
+  - [Toast](#toast)
+  - [Skeleton](#skeleton)
+  - [RadialProgress](#radialprogress)
 - [Navigation](#navigation)
   - [Dropdown](#dropdown)
   - [ActionMenu](#actionmenu)
@@ -48,9 +55,12 @@ Complete API documentation for all Lite UI components.
   - [Breadcrumbs](#breadcrumbs)
 - [Date & Time](#date--time)
   - [DatePicker](#datepicker)
+  - [Countdown](#countdown)
   - [Slider](#slider)
 - [Utilities](#utilities)
   - [DarkModeToggle](#darkmodetoggle)
+  - [Kbd](#kbd)
+  - [FAB](#fab)
   - [Icons](#icons)
 
 ---
@@ -537,6 +547,97 @@ templ Divider(
 
 ---
 
+### Hero
+
+Hero section component for landing pages.
+
+**API**
+
+```go
+templ Hero(title string, description string, actions templ.Component, backgroundImage string)
+templ HeroWithImage(title string, description string, actions templ.Component, imageUrl string)
+templ HeroMinimal(title string, description string, actions templ.Component)
+```
+
+**Usage**
+
+```go
+// Full-width hero with gradient background
+@ui.Hero("Welcome", "Build amazing apps", HeroButtons(), "")
+
+// Hero with side image
+@ui.HeroWithImage("Get Started", "Easy setup in minutes", HeroButtons(), "https://...")
+
+// Minimal hero
+@ui.HeroMinimal("Simple & Clean", "No distractions", HeroButtons())
+```
+
+---
+
+### Footer
+
+Website footer component with multiple layouts.
+
+**API**
+
+```go
+type FooterSection struct {
+    Title string
+    Links []FooterLink
+}
+
+type FooterLink struct {
+    Label string
+    Href  string
+}
+
+templ Footer(sections []FooterSection, copyright string)
+templ FooterSimple(copyright string, links []FooterLink)
+templ FooterWithSocial(sections []FooterSection, copyright string, socialLinks templ.Component)
+```
+
+**Usage**
+
+```go
+// Multi-column footer
+@ui.Footer([]ui.FooterSection{
+    {
+        Title: "Product",
+        Links: []ui.FooterLink{
+            {Label: "Features", Href: "/features"},
+            {Label: "Pricing", Href: "/pricing"},
+        },
+    },
+}, "© 2025 Company")
+
+// Simple footer
+@ui.FooterSimple("© 2025 Company", []ui.FooterLink{
+    {Label: "Privacy", Href: "/privacy"},
+    {Label: "Terms", Href: "/terms"},
+})
+```
+
+---
+
+### Collapse
+
+Simple collapsible content section.
+
+**API**
+
+```go
+templ Collapse(title string, content templ.Component, defaultOpen bool)
+```
+
+**Usage**
+
+```go
+@ui.Collapse("Details", DetailsContent(), false)
+@ui.Collapse("Expanded Section", ExpandedContent(), true)
+```
+
+---
+
 ## Data Display
 
 ### Table
@@ -856,6 +957,46 @@ templ EventCalendar(events []CalendarEvent)
 
 ---
 
+### ChatBubble
+
+Chat message bubble component for messaging interfaces.
+
+**API**
+
+```go
+templ ChatBubble(
+    direction string,  // "sent" or "received"
+    message string,
+    time string,
+    avatar templ.Component,
+)
+
+templ ChatBubbleWithImage(
+    direction string,
+    message string,
+    imageUrl string,
+    time string,
+    avatar templ.Component,
+)
+
+templ ChatContainer(messages templ.Component)
+```
+
+**Usage**
+
+```go
+@ui.ChatBubble("sent", "Hello!", "10:30 AM", ui.Avatar("...", "User", "sm"))
+@ui.ChatBubble("received", "Hi there!", "10:31 AM", ui.Avatar("...", "User", "sm"))
+
+// With image
+@ui.ChatBubbleWithImage("sent", "Check this out", "https://...", "10:32 AM", ui.Avatar("...", "User", "sm"))
+
+// Full chat container
+@ui.ChatContainer(ChatMessages())
+```
+
+---
+
 ## Feedback
 
 ### Alert
@@ -944,6 +1085,97 @@ templ Tooltip(
 
 ```go
 @ui.Tooltip("Click to save", "top", ui.Button("Save", ui.ButtonPrimary, templ.Attributes{}))
+```
+
+---
+
+### Toast
+
+Toast notification component for temporary messages.
+
+**API**
+
+```go
+// Add ToastContainer once to your layout
+templ ToastContainer()
+
+// Trigger from button or code
+window.dispatchEvent(new CustomEvent('show-toast', {
+    detail: {
+        message: 'Operation completed',
+        variant: 'success',  // 'success', 'error', 'warning', 'info'
+        title: 'Success',
+        duration: 3000  // milliseconds (optional)
+    }
+}))
+```
+
+**Usage**
+
+```go
+// Add to your layout (once)
+@ui.ToastContainer()
+
+// Trigger from Alpine.js/HTMX
+@ui.Button("Save", ui.ButtonPrimary, templ.Attributes{
+    "@click": "window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: 'Saved!', variant: 'success' } }))",
+})
+```
+
+---
+
+### Skeleton
+
+Loading placeholder components with pulse animation.
+
+**API**
+
+```go
+templ SkeletonText(size string, lines int)     // "sm", "md", "lg"
+templ SkeletonCircle(size string)              // "sm", "md", "lg", "xl"
+templ SkeletonBox(width string, height string) // Custom dimensions
+templ SkeletonCard()                            // Pre-built card skeleton
+templ SkeletonTable(rows int)                  // Table skeleton
+```
+
+**Usage**
+
+```go
+// Text loading
+@ui.SkeletonText("md", 3)
+
+// Avatar loading
+@ui.SkeletonCircle("md")
+
+// Card loading
+@ui.SkeletonCard()
+
+// Table loading
+@ui.SkeletonTable(5)
+```
+
+---
+
+### RadialProgress
+
+Circular progress indicator.
+
+**API**
+
+```go
+templ RadialProgress(
+    value int,
+    max int,
+    size string,  // "sm", "md", "lg", "xl"
+    color string, // "indigo", "green", "blue", "red", etc.
+    showLabel bool,
+)
+```
+
+**Usage**
+
+```go
+@ui.RadialProgress(75, 100, "md", "indigo", true)
 ```
 
 ---
@@ -1108,6 +1340,34 @@ The DatePicker properly submits values with forms (including HTMX):
 
 ---
 
+### Countdown
+
+Live countdown timer with days, hours, minutes, and seconds.
+
+**API**
+
+```go
+templ Countdown(
+    targetDate string, // ISO 8601 format: "2025-12-31T23:59:59"
+    size string,       // "sm", "md", "lg"
+)
+```
+
+**Usage**
+
+```go
+// Large countdown
+@ui.Countdown("2025-12-31T23:59:59", "lg")
+
+// Medium countdown
+@ui.Countdown("2025-06-15T12:00:00", "md")
+
+// Small countdown
+@ui.Countdown("2025-03-01T09:00:00", "sm")
+```
+
+---
+
 ### Slider
 
 Range slider component.
@@ -1153,6 +1413,78 @@ templ DarkModeToggle()
 ```
 
 **Note:** Requires dark mode script in HTML (see README.md)
+
+---
+
+### Kbd
+
+Keyboard shortcut display component.
+
+**API**
+
+```go
+templ Kbd(key string)
+templ KbdCombo(keys []string)
+templ KbdHelp(description string, keys []string)
+```
+
+**Usage**
+
+```go
+// Single key
+@ui.Kbd("Ctrl")
+@ui.Kbd("Enter")
+
+// Key combination
+@ui.KbdCombo([]string{"Ctrl", "Shift", "P"})
+
+// With description
+@ui.KbdHelp("Save", []string{"Ctrl", "S"})
+@ui.KbdHelp("Copy", []string{"Ctrl", "C"})
+```
+
+---
+
+### FAB
+
+Floating Action Button and Speed Dial.
+
+**API**
+
+```go
+templ FAB(icon templ.Component, attrs templ.Attributes)
+
+type SpeedDialAction struct {
+    Label string
+    Icon  templ.Component
+    Attrs templ.Attributes
+}
+
+templ SpeedDial(actions []SpeedDialAction)
+```
+
+**Usage**
+
+```go
+// Simple FAB
+@ui.FAB(ui.IconPlus(), templ.Attributes{
+    "@click": "alert('Add new')",
+})
+
+// Speed Dial with multiple actions
+@ui.SpeedDial([]ui.SpeedDialAction{
+    {
+        Label: "Create Post",
+        Icon: ui.IconPlus(),
+        Attrs: templ.Attributes{"@click": "createPost()"},
+    },
+    {
+        Label: "Upload File",
+        Icon: ui.IconFolder(),
+        Attrs: templ.Attributes{"@click": "uploadFile()"},
+    },
+})
+```
 
 ---
 

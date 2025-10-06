@@ -125,11 +125,12 @@ templ SidebarFooter() {
 func SidebarItems(currentPage string) []ui.SidebarItem {
 	return []ui.SidebarItem{
 		{Label: "Home", Href: "/", Icon: ui.IconHome(), Active: currentPage == "Home"},
+		{Label: "Icons", Href: "/icons", Icon: ui.IconCpu(), Active: currentPage == "Icons"},
 		{Label: "Inputs & Forms", Href: "/inputs", Icon: ui.IconCheck("gray"), Active: currentPage == "Inputs & Forms"},
 		{Label: "Date & Time", Href: "/datetime", Icon: ui.IconClock(), Active: currentPage == "Date & Time"},
 		{Label: "Feedback & Indicators", Href: "/feedback", Icon: ui.IconCheck("indigo"), Active: currentPage == "Feedback & Indicators"},
 		{Label: "Navigation", Href: "/navigation", Icon: ui.IconFolder(), Active: currentPage == "Navigation"},
-		{Label: "Layout & Display", Href: "/layout", Icon: ui.IconChart(), Active: currentPage == "Layout & Display"},
+		{Label: "Layout & Display", Href: "/layout", Icon: ui.IconChart("gray"), Active: currentPage == "Layout & Display"},
 		{Label: "Data Display", Href: "/data-display", Icon: ui.IconFolder(), Active: currentPage == "Data Display"},
 	}
 }

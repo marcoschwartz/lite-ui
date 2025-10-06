@@ -18,6 +18,16 @@ templ DataDisplayPage() {
 				@ui.Card(ui.CardConfig{Title: "Bordered List"}, ListBorderedDemo())
 				@ui.Card(ui.CardConfig{Title: "Divided List"}, ListDividedDemo())
 			</div>
+
+			<!-- Chat Bubbles -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Chat Bubbles"}, ChatBubbleDemo())
+			</div>
+
+			<!-- Keyboard Shortcuts -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Keyboard Shortcuts"}, KbdDemo())
+			</div>
 		</div>
 	}
 }
@@ -99,7 +109,7 @@ func GetListItems() []ui.ListItem {
 		},
 		{
 			Content: ListItemContent("Disabled Item", "This is disabled"),
-			Icon:    ui.IconChart(),
+			Icon:    ui.IconChart("gray"),
 			Disabled: true,
 		},
 	}
@@ -109,5 +119,49 @@ templ ListItemContent(title string, subtitle string) {
 	<div>
 		<p class="font-medium text-gray-900 dark:text-gray-100">{ title }</p>
 		<p class="text-sm text-gray-500 dark:text-gray-400">{ subtitle }</p>
+	</div>
+}
+
+templ ChatBubbleDemo() {
+	@ui.ChatContainer(ChatMessages())
+}
+
+templ ChatMessages() {
+	@ui.ChatBubble("received", "Hey! How are you?", "10:30 AM", ui.Avatar("https://ui-avatars.com/api/?name=John+Doe&background=6366f1&color=fff", "John Doe", "sm"))
+	@ui.ChatBubble("sent", "I'm doing great, thanks! How about you?", "10:31 AM", nil)
+	@ui.ChatBubble("received", "Pretty good! Working on some new features.", "10:32 AM", ui.Avatar("https://ui-avatars.com/api/?name=John+Doe&background=6366f1&color=fff", "John Doe", "sm"))
+	@ui.ChatBubbleWithImage("received", "Check out this screenshot!", "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=400&h=300&fit=crop", "10:33 AM", ui.Avatar("https://ui-avatars.com/api/?name=John+Doe&background=6366f1&color=fff", "John Doe", "sm"))
+	@ui.ChatBubble("sent", "Looks awesome! 🎉", "10:34 AM", nil)
+}
+
+templ KbdDemo() {
+	<div class="space-y-6">
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Single Keys</h3>
+			<div class="flex gap-2">
+				@ui.Kbd("⌘")
+				@ui.Kbd("Ctrl")
+				@ui.Kbd("Shift")
+				@ui.Kbd("Alt")
+				@ui.Kbd("Enter")
+			</div>
+		</div>
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Key Combinations</h3>
+			<div class="space-y-2">
+				@ui.KbdCombo([]string{"⌘", "K"})
+				@ui.KbdCombo([]string{"Ctrl", "Shift", "P"})
+				@ui.KbdCombo([]string{"Alt", "F4"})
+			</div>
+		</div>
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">With Descriptions</h3>
+			<div class="space-y-2">
+				@ui.KbdHelp("Save document", []string{"⌘", "S"})
+				@ui.KbdHelp("Open command palette", []string{"⌘", "K"})
+				@ui.KbdHelp("Search", []string{"⌘", "F"})
+				@ui.KbdHelp("Close window", []string{"⌘", "W"})
+			</div>
+		</div>
 	</div>
 }

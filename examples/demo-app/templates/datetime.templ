@@ -48,6 +48,12 @@ templ DateTimePage() {
 					@ui.Card(ui.CardConfig{Title: "Week Picker"}, WeekPickerDemo())
 				</div>
 			</div>
+
+			<!-- Countdown Timer -->
+			<div class="mb-8">
+				<h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Countdown Timer</h2>
+				@ui.Card(ui.CardConfig{Title: "Live Countdown"}, CountdownDemo())
+			</div>
 		</div>
 	}
 }
@@ -155,6 +161,28 @@ templ FormSubmissionDemo() {
 			<p class="text-xs text-green-700 dark:text-green-300 mt-3">
 				All DatePicker values are properly captured and ready for submission!
 			</p>
+		</div>
+	</div>
+}
+
+templ CountdownDemo() {
+	<div class="space-y-6">
+		<p class="text-sm text-gray-600 dark:text-gray-400">Countdown to New Year 2026:</p>
+		<div class="flex justify-center">
+			@ui.Countdown("2026-01-01T00:00:00", "lg")
+		</div>
+		<div class="mt-4">
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">Other Sizes:</h3>
+			<div class="flex flex-col gap-4">
+				<div>
+					<p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Small:</p>
+					@ui.Countdown("2026-01-01T00:00:00", "sm")
+				</div>
+				<div>
+					<p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Medium:</p>
+					@ui.Countdown("2026-01-01T00:00:00", "md")
+				</div>
+			</div>
 		</div>
 	</div>
 }
