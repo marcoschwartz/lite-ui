@@ -1,6 +1,9 @@
 package templates
 
-import ui "github.com/marcoschwartz/lite-ui/components"
+import (
+	ui "github.com/marcoschwartz/lite-ui/components"
+	"time"
+)
 
 templ InputsPage() {
 	@Layout("Inputs & Forms") {
@@ -32,11 +35,20 @@ templ InputsPage() {
 			<!-- Date & Time Pickers -->
 			<div class="mb-8">
 				<h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Date & Time</h2>
-				<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 					@ui.Card(ui.CardConfig{Title: "Date Picker"}, DatePickerDemo())
+					@ui.Card(ui.CardConfig{Title: "Calendar"}, CalendarDemo())
+				</div>
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
 					@ui.Card(ui.CardConfig{Title: "Rating"}, RatingDemo())
 					@ui.Card(ui.CardConfig{Title: "File Upload"}, FileInputDemo())
 				</div>
+			</div>
+
+			<!-- Event Calendar -->
+			<div class="mb-8">
+				<h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Event Calendar</h2>
+				@ui.Card(ui.CardConfig{Title: "Full Calendar with Events"}, EventCalendarDemoInputs())
 			</div>
 
 			<!-- Complete Form -->
@@ -116,11 +128,21 @@ templ RatingDemo() {
 	</div>
 }
 
+templ CalendarDemo() {
+	<div class="flex justify-center">
+		@ui.Calendar("appointment_date", "2025-10-15")
+	</div>
+}
+
 templ FileInputDemo() {
 	<div class="space-y-4">
 		@ui.FileInput("Upload Document", "document", false, false, "", templ.Attributes{})
 		<div class="text-xs text-gray-500 dark:text-gray-400">Drag & drop supported</div>
 	</div>
+}
+
+templ EventCalendarDemoInputs() {
+	@ui.EventCalendar("demo_calendar", getExampleEvents())
 }
 
 templ CompleteFormDemo() {
@@ -139,4 +161,66 @@ templ CompleteFormDemo() {
 			@ui.Button("Cancel", ui.ButtonSecondary, templ.Attributes{"type": "button"})
 		</div>
 	</form>
+}
+
+func getExampleEvents() []ui.CalendarEvent {
+	now := time.Now()
+	year, month, _ := now.Date()
+
+	return []ui.CalendarEvent{
+		{
+			ID:          "1",
+			Title:       "Team Meeting",
+			Description: "Weekly team sync",
+			StartTime:   time.Date(year, month, 5, 9, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 5, 10, 0, 0, 0, time.UTC),
+			AllDay:      false,
+			Color:       "blue",
+		},
+		{
+			ID:          "2",
+			Title:       "Project Deadline",
+			Description: "Submit final report",
+			StartTime:   time.Date(year, month, 15, 0, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 15, 23, 59, 0, 0, time.UTC),
+			AllDay:      true,
+			Color:       "red",
+		},
+		{
+			ID:          "3",
+			Title:       "Client Call",
+			Description: "Quarterly review with client",
+			StartTime:   time.Date(year, month, 10, 14, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 10, 15, 30, 0, 0, time.UTC),
+			AllDay:      false,
+			Color:       "green",
+		},
+		{
+			ID:          "4",
+			Title:       "Conference",
+			Description: "Tech conference downtown",
+			StartTime:   time.Date(year, month, 20, 0, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 20, 23, 59, 0, 0, time.UTC),
+			AllDay:      true,
+			Color:       "purple",
+		},
+		{
+			ID:          "5",
+			Title:       "Lunch Break",
+			Description: "Team lunch",
+			StartTime:   time.Date(year, month, 12, 12, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 12, 13, 0, 0, 0, time.UTC),
+			AllDay:      false,
+			Color:       "yellow",
+		},
+		{
+			ID:          "6",
+			Title:       "Code Review",
+			Description: "Review new PR",
+			StartTime:   time.Date(year, month, 8, 15, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 8, 16, 0, 0, 0, time.UTC),
+			AllDay:      false,
+			Color:       "pink",
+		},
+	}
 }

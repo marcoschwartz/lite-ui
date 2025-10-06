@@ -1,0 +1,310 @@
+package components
+
+import (
+	"fmt"
+	"time"
+)
+
+// CalendarEvent represents a single event on the calendar
+type CalendarEvent struct {
+	ID          string
+	Title       string
+	Description string
+	StartTime   time.Time
+	EndTime     time.Time
+	AllDay      bool
+	Color       string // "blue", "red", "green", "purple", "yellow", "pink"
+}
+
+// EventCalendar - Full-featured event calendar component
+// Usage:
+//   @ui.EventCalendar("my_calendar", events)
+templ EventCalendar(id string, events []CalendarEvent) {
+	<div
+		x-data={
+			fmt.Sprintf(`{
+				currentDate: new Date(),
+				view: 'month',
+				events: %s,
+				selectedEvent: null,
+				showEventModal: false,
+
+				get monthYear() {
+					return this.currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+				},
+
+				get calendarDays() {
+					const year = this.currentDate.getFullYear();
+					const month = this.currentDate.getMonth();
+					const firstDay = new Date(year, month, 1).getDay();
+					const lastDate = new Date(year, month + 1, 0).getDate();
+					const prevLastDate = new Date(year, month, 0).getDate();
+
+					let days = [];
+
+					// Previous month days
+					for (let i = firstDay - 1; i >= 0; i--) {
+						days.push({
+							day: prevLastDate - i,
+							date: new Date(year, month - 1, prevLastDate - i),
+							isCurrentMonth: false
+						});
+					}
+
+					// Current month days
+					for (let i = 1; i <= lastDate; i++) {
+						const date = new Date(year, month, i);
+						const dateStr = date.toISOString().split('T')[0];
+						const dayEvents = this.events.filter(e => {
+							const eventDate = new Date(e.StartTime).toISOString().split('T')[0];
+							return eventDate === dateStr;
+						});
+
+						const isToday = new Date().toDateString() === date.toDateString();
+
+						days.push({
+							day: i,
+							date: date,
+							isCurrentMonth: true,
+							isToday: isToday,
+							events: dayEvents
+						});
+					}
+
+					// Next month days
+					const remaining = 42 - days.length;
+					for (let i = 1; i <= remaining; i++) {
+						days.push({
+							day: i,
+							date: new Date(year, month + 1, i),
+							isCurrentMonth: false
+						});
+					}
+
+					return days;
+				},
+
+				prevMonth() {
+					this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1);
+				},
+
+				nextMonth() {
+					this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1);
+				},
+
+				today() {
+					this.currentDate = new Date();
+				},
+
+				viewEvent(event) {
+					this.selectedEvent = event;
+					this.showEventModal = true;
+				},
+
+				getEventColor(color) {
+					const colors = {
+						blue: 'bg-blue-500',
+						red: 'bg-red-500',
+						green: 'bg-green-500',
+						purple: 'bg-purple-500',
+						yellow: 'bg-yellow-500',
+						pink: 'bg-pink-500'
+					};
+					return colors[color] || colors.blue;
+				},
+
+				formatTime(dateStr) {
+					const date = new Date(dateStr);
+					return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+				}
+			}`, serializeEvents(events)),
+		}
+		class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full"
+	>
+		<!-- Header -->
+		<div class="flex items-center justify-between mb-6">
+			<div class="flex items-center gap-4">
+				<h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="monthYear"></h2>
+				<button
+					@click="today()"
+					type="button"
+					class="px-3 py-1 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+				>
+					Today
+				</button>
+			</div>
+
+			<div class="flex items-center gap-2">
+				<button
+					@click="prevMonth()"
+					type="button"
+					class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+				>
+					<svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+					</svg>
+				</button>
+
+				<button
+					@click="nextMonth()"
+					type="button"
+					class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+				>
+					<svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+					</svg>
+				</button>
+			</div>
+		</div>
+
+		<!-- Day headers -->
+		<div class="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700 border border-gray-200 dark:border-gray-700 rounded-t-lg overflow-hidden">
+			<div class="bg-gray-50 dark:bg-gray-800 text-center py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Sun</div>
+			<div class="bg-gray-50 dark:bg-gray-800 text-center py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Mon</div>
+			<div class="bg-gray-50 dark:bg-gray-800 text-center py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Tue</div>
+			<div class="bg-gray-50 dark:bg-gray-800 text-center py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Wed</div>
+			<div class="bg-gray-50 dark:bg-gray-800 text-center py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Thu</div>
+			<div class="bg-gray-50 dark:bg-gray-800 text-center py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Fri</div>
+			<div class="bg-gray-50 dark:bg-gray-800 text-center py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Sat</div>
+		</div>
+
+		<!-- Calendar grid -->
+		<div class="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700 border-x border-b border-gray-200 dark:border-gray-700 rounded-b-lg overflow-hidden">
+			<template x-for="(dayObj, index) in calendarDays" :key="index">
+				<div
+					class="bg-white dark:bg-gray-800 min-h-[120px] p-2 relative"
+					:class="{
+						'bg-gray-50 dark:bg-gray-900': !dayObj.isCurrentMonth,
+						'ring-2 ring-indigo-500 ring-inset': dayObj.isToday
+					}"
+				>
+					<!-- Day number -->
+					<div class="flex justify-between items-start mb-1">
+						<span
+							class="text-sm font-medium"
+							:class="{
+								'text-gray-400 dark:text-gray-600': !dayObj.isCurrentMonth,
+								'text-gray-900 dark:text-gray-100': dayObj.isCurrentMonth && !dayObj.isToday,
+								'bg-indigo-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs': dayObj.isToday
+							}"
+							x-text="dayObj.day"
+						></span>
+					</div>
+
+					<!-- Events -->
+					<div class="space-y-1">
+						<template x-for="(event, eventIdx) in dayObj.events.slice(0, 3)" :key="eventIdx">
+							<div
+								@click="viewEvent(event)"
+								class="text-xs px-2 py-1 rounded text-white cursor-pointer hover:opacity-80 transition-opacity truncate"
+								:class="getEventColor(event.Color)"
+							>
+								<span x-show="!event.AllDay" x-text="formatTime(event.StartTime)"></span>
+								<span x-text="event.Title"></span>
+							</div>
+						</template>
+
+						<div
+							x-show="dayObj.events.length > 3"
+							class="text-xs text-gray-600 dark:text-gray-400 px-2 cursor-pointer hover:underline"
+							x-text="'+' + (dayObj.events.length - 3) + ' more'"
+						></div>
+					</div>
+				</div>
+			</template>
+		</div>
+
+		<!-- Event Modal -->
+		<div
+			x-show="showEventModal"
+			x-cloak
+			@click.self="showEventModal = false"
+			class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+		>
+			<div
+				@click.stop
+				class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6"
+				x-show="showEventModal"
+				x-transition
+			>
+				<div class="flex justify-between items-start mb-4">
+					<h3 class="text-xl font-bold text-gray-900 dark:text-gray-100" x-text="selectedEvent?.Title"></h3>
+					<button
+						@click="showEventModal = false"
+						class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+					>
+						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+						</svg>
+					</button>
+				</div>
+
+				<div class="space-y-3">
+					<div x-show="selectedEvent?.Description" class="text-gray-600 dark:text-gray-400" x-text="selectedEvent?.Description"></div>
+
+					<div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+						</svg>
+						<span x-show="selectedEvent?.AllDay">All day</span>
+						<span x-show="!selectedEvent?.AllDay">
+							<span x-text="selectedEvent && formatTime(selectedEvent.StartTime)"></span>
+							-
+							<span x-text="selectedEvent && formatTime(selectedEvent.EndTime)"></span>
+						</span>
+					</div>
+
+					<div class="flex items-center gap-2">
+						<div
+							class="w-4 h-4 rounded"
+							:class="selectedEvent && getEventColor(selectedEvent.Color)"
+						></div>
+						<span class="text-sm text-gray-600 dark:text-gray-400 capitalize" x-text="selectedEvent?.Color"></span>
+					</div>
+				</div>
+
+				<div class="mt-6 flex justify-end">
+					<button
+						@click="showEventModal = false"
+						class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+					>
+						Close
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+// Helper function to serialize events to JSON for Alpine.js
+func serializeEvents(events []CalendarEvent) string {
+	if len(events) == 0 {
+		return "[]"
+	}
+
+	result := "["
+	for i, event := range events {
+		if i > 0 {
+			result += ","
+		}
+		result += fmt.Sprintf(`{
+			"ID": "%s",
+			"Title": "%s",
+			"Description": "%s",
+			"StartTime": "%s",
+			"EndTime": "%s",
+			"AllDay": %t,
+			"Color": "%s"
+		}`,
+			event.ID,
+			event.Title,
+			event.Description,
+			event.StartTime.Format(time.RFC3339),
+			event.EndTime.Format(time.RFC3339),
+			event.AllDay,
+			event.Color,
+		)
+	}
+	result += "]"
+	return result
+}

@@ -10,9 +10,6 @@ templ Layout(title string) {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<title>{ title } - Lite UI Demo</title>
 			<link rel="stylesheet" href="/static/css/output.css"/>
-			<style>
-				[x-cloak] { display: none !important; }
-			</style>
 			<!-- Dark mode script -->
 			<script>
 				const theme = localStorage.getItem('theme') ||
@@ -154,6 +151,7 @@ func SidebarItems(currentPage string) []ui.SidebarItem {
 	return []ui.SidebarItem{
 		{Label: "Home", Href: "/", Icon: ui.IconHome(), Active: currentPage == "Home"},
 		{Label: "Inputs & Forms", Href: "/inputs", Icon: ui.IconCheck("gray"), Active: currentPage == "Inputs & Forms"},
+		{Label: "Date & Time", Href: "/datetime", Icon: ui.IconClock(), Active: currentPage == "Date & Time"},
 		{Label: "Feedback & Indicators", Href: "/feedback", Icon: ui.IconCheck("indigo"), Active: currentPage == "Feedback & Indicators"},
 		{Label: "Navigation", Href: "/navigation", Icon: ui.IconFolder(), Active: currentPage == "Navigation"},
 		{Label: "Layout & Display", Href: "/layout", Icon: ui.IconChart(), Active: currentPage == "Layout & Display"},

@@ -288,6 +288,18 @@ Use the dark mode toggle component:
 @ui.DarkModeToggle()
 ```
 
+## Alpine.js Integration
+
+Lite UI includes built-in support for Alpine.js `x-cloak` to prevent content flashing before Alpine initializes. The `input.css` file already includes the necessary styles:
+
+```css
+[x-cloak] {
+	display: none !important;
+}
+```
+
+Components like Modal, Drawer, and Sidebar automatically use `x-cloak` to ensure smooth loading without visual flashing.
+
 ## HTMX Integration
 
 Components are designed to work seamlessly with HTMX for dynamic interactions:

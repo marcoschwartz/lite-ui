@@ -1,0 +1,208 @@
+package templates
+
+import (
+	ui "github.com/marcoschwartz/lite-ui/components"
+	"time"
+)
+
+templ DateTimePage() {
+	@Layout("Date & Time") {
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+			<h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">Date & Time Components</h1>
+
+			<!-- Date Pickers -->
+			<div class="mb-8">
+				<h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Date Pickers</h2>
+				<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+					@ui.Card(ui.CardConfig{Title: "Date Input"}, DateInputDemo())
+					@ui.Card(ui.CardConfig{Title: "Time Input"}, TimeInputDemo())
+					@ui.Card(ui.CardConfig{Title: "DateTime Input"}, DateTimeInputDemo())
+				</div>
+			</div>
+
+			<!-- Calendar Picker -->
+			<div class="mb-8">
+				<h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Calendar Picker</h2>
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+					@ui.Card(ui.CardConfig{Title: "Interactive Calendar"}, CalendarPickerDemo())
+					@ui.Card(ui.CardConfig{Title: "Usage Example"}, CalendarUsageDemo())
+				</div>
+			</div>
+
+			<!-- Event Calendar -->
+			<div class="mb-8">
+				<h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Event Calendar</h2>
+				@ui.Card(ui.CardConfig{Title: "Full Calendar with Events"}, EventCalendarDemo())
+			</div>
+
+			<!-- Additional Time Components -->
+			<div class="mb-8">
+				<h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Additional Inputs</h2>
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+					@ui.Card(ui.CardConfig{Title: "Month Picker"}, MonthPickerDemo())
+					@ui.Card(ui.CardConfig{Title: "Week Picker"}, WeekPickerDemo())
+				</div>
+			</div>
+		</div>
+	}
+}
+
+templ DateInputDemo() {
+	<div class="space-y-4">
+		@ui.DatePicker("Event Date", "event-date", "", "date", false, templ.Attributes{})
+		<div class="text-xs text-gray-500 dark:text-gray-400">
+			Native HTML5 date input with calendar popup
+		</div>
+	</div>
+}
+
+templ TimeInputDemo() {
+	<div class="space-y-4">
+		@ui.DatePicker("Meeting Time", "meeting-time", "", "time", false, templ.Attributes{})
+		<div class="text-xs text-gray-500 dark:text-gray-400">
+			Select hours and minutes
+		</div>
+	</div>
+}
+
+templ DateTimeInputDemo() {
+	<div class="space-y-4">
+		@ui.DatePicker("Appointment", "appointment", "", "datetime-local", false, templ.Attributes{})
+		<div class="text-xs text-gray-500 dark:text-gray-400">
+			Combined date and time selection
+		</div>
+	</div>
+}
+
+templ CalendarPickerDemo() {
+	<div class="flex justify-center">
+		@ui.Calendar("appointment_date", "2025-10-15")
+	</div>
+}
+
+templ CalendarUsageDemo() {
+	<div class="space-y-4">
+		<div class="text-sm text-gray-600 dark:text-gray-400">
+			<p class="font-semibold mb-2">Usage:</p>
+			<pre class="bg-gray-100 dark:bg-gray-900 p-3 rounded text-xs overflow-x-auto">@ui.Calendar("field_name", "2025-10-15")</pre>
+		</div>
+
+		<div class="text-sm text-gray-600 dark:text-gray-400">
+			<p class="font-semibold mb-2">Get selected value:</p>
+			<pre class="bg-gray-100 dark:bg-gray-900 p-3 rounded text-xs overflow-x-auto">date := r.FormValue("field_name")</pre>
+		</div>
+
+		<div class="text-sm text-gray-600 dark:text-gray-400">
+			<p class="font-semibold mb-2">Features:</p>
+			<ul class="list-disc list-inside space-y-1">
+				<li>Month/year navigation</li>
+				<li>Clickable dates</li>
+				<li>Selected date highlight</li>
+				<li>Weekend styling</li>
+				<li>Dark mode support</li>
+			</ul>
+		</div>
+	</div>
+}
+
+templ EventCalendarDemo() {
+	@ui.EventCalendar("demo_calendar", getDemoEvents())
+}
+
+templ MonthPickerDemo() {
+	<div class="space-y-4">
+		@ui.DatePicker("Select Month", "month-picker", "", "month", false, templ.Attributes{})
+		<div class="text-xs text-gray-500 dark:text-gray-400">
+			Pick month and year
+		</div>
+	</div>
+}
+
+templ WeekPickerDemo() {
+	<div class="space-y-4">
+		@ui.DatePicker("Select Week", "week-picker", "", "week", false, templ.Attributes{})
+		<div class="text-xs text-gray-500 dark:text-gray-400">
+			Select a week of the year
+		</div>
+	</div>
+}
+
+func getDemoEvents() []ui.CalendarEvent {
+	now := time.Now()
+	year, month, _ := now.Date()
+
+	return []ui.CalendarEvent{
+		{
+			ID:          "1",
+			Title:       "Team Standup",
+			Description: "Daily team sync meeting",
+			StartTime:   time.Date(year, month, 5, 9, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 5, 9, 30, 0, 0, time.UTC),
+			AllDay:      false,
+			Color:       "blue",
+		},
+		{
+			ID:          "2",
+			Title:       "Project Deadline",
+			Description: "Submit final deliverables",
+			StartTime:   time.Date(year, month, 15, 0, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 15, 23, 59, 0, 0, time.UTC),
+			AllDay:      true,
+			Color:       "red",
+		},
+		{
+			ID:          "3",
+			Title:       "Client Presentation",
+			Description: "Quarterly business review",
+			StartTime:   time.Date(year, month, 10, 14, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 10, 15, 30, 0, 0, time.UTC),
+			AllDay:      false,
+			Color:       "green",
+		},
+		{
+			ID:          "4",
+			Title:       "Tech Conference",
+			Description: "Annual developer conference",
+			StartTime:   time.Date(year, month, 20, 0, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 20, 23, 59, 0, 0, time.UTC),
+			AllDay:      true,
+			Color:       "purple",
+		},
+		{
+			ID:          "5",
+			Title:       "Team Lunch",
+			Description: "Monthly team building lunch",
+			StartTime:   time.Date(year, month, 12, 12, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 12, 13, 30, 0, 0, time.UTC),
+			AllDay:      false,
+			Color:       "yellow",
+		},
+		{
+			ID:          "6",
+			Title:       "Code Review",
+			Description: "Review feature branch PR",
+			StartTime:   time.Date(year, month, 8, 15, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 8, 16, 0, 0, 0, time.UTC),
+			AllDay:      false,
+			Color:       "pink",
+		},
+		{
+			ID:          "7",
+			Title:       "Sprint Planning",
+			Description: "Plan next 2-week sprint",
+			StartTime:   time.Date(year, month, 18, 10, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 18, 12, 0, 0, 0, time.UTC),
+			AllDay:      false,
+			Color:       "blue",
+		},
+		{
+			ID:          "8",
+			Title:       "Product Demo",
+			Description: "Demo new features to stakeholders",
+			StartTime:   time.Date(year, month, 22, 15, 0, 0, 0, time.UTC),
+			EndTime:     time.Date(year, month, 22, 16, 0, 0, 0, time.UTC),
+			AllDay:      false,
+			Color:       "green",
+		},
+	}
+}

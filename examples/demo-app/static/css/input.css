@@ -2,3 +2,18 @@
 
 @source "../../templates/**/*.templ";
 @source "../../../../components/**/*.templ";
+
+/* Alpine.js x-cloak - Prevents flash of content before Alpine loads */
+[x-cloak] {
+	display: none !important;
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

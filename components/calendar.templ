@@ -1,0 +1,130 @@
+package components
+
+import (
+	"fmt"
+)
+
+// Calendar - Interactive calendar component with Alpine.js
+// Usage:
+//   @ui.Calendar("appointment_date", "2025-10-15")
+templ Calendar(name string, selectedDate string) {
+	<div
+		x-data={
+			fmt.Sprintf(`{
+				currentMonth: new Date('%s' || new Date()),
+				selectedDate: '%s',
+				get monthYear() {
+					return this.currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+				},
+				get daysInMonth() {
+					const year = this.currentMonth.getFullYear();
+					const month = this.currentMonth.getMonth();
+					const firstDay = new Date(year, month, 1).getDay();
+					const lastDate = new Date(year, month + 1, 0).getDate();
+					const prevLastDate = new Date(year, month, 0).getDate();
+
+					let days = [];
+
+					// Previous month days
+					for (let i = firstDay - 1; i >= 0; i--) {
+						days.push({ day: prevLastDate - i, isCurrentMonth: false, isPrevMonth: true });
+					}
+
+					// Current month days
+					for (let i = 1; i <= lastDate; i++) {
+						const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(i).padStart(2, '0');
+						const dayOfWeek = new Date(year, month, i).getDay();
+						days.push({
+							day: i,
+							isCurrentMonth: true,
+							isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
+							dateStr: dateStr,
+							isSelected: this.selectedDate === dateStr
+						});
+					}
+
+					// Next month days
+					const remaining = 42 - days.length; // 6 rows * 7 days
+					for (let i = 1; i <= remaining; i++) {
+						days.push({ day: i, isCurrentMonth: false, isNextMonth: true });
+					}
+
+					return days;
+				},
+				prevMonth() {
+					this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() - 1);
+				},
+				nextMonth() {
+					this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1);
+				},
+				selectDate(dateStr) {
+					this.selectedDate = dateStr;
+					document.getElementById('%s').value = dateStr;
+					document.getElementById('%s').dispatchEvent(new Event('change'));
+					window.dispatchEvent(new CustomEvent('date-selected', { detail: { name: '%s', date: dateStr } }));
+				}
+			}`, selectedDate, selectedDate, name, name, name),
+		}
+		class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 w-full max-w-sm"
+	>
+		<!-- Hidden input to store selected date -->
+		<input type="hidden" id={ name } name={ name } value={ selectedDate }/>
+
+		<!-- Header with month/year and navigation -->
+		<div class="flex items-center justify-between mb-4">
+			<button
+				@click="prevMonth()"
+				type="button"
+				class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+			>
+				<svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+				</svg>
+			</button>
+
+			<h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100" x-text="monthYear"></h3>
+
+			<button
+				@click="nextMonth()"
+				type="button"
+				class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+			>
+				<svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+				</svg>
+			</button>
+		</div>
+
+		<!-- Day labels -->
+		<div class="grid grid-cols-7 gap-1 mb-2">
+			<div class="text-center text-xs font-medium text-gray-500 dark:text-gray-400 py-2">Mo</div>
+			<div class="text-center text-xs font-medium text-gray-500 dark:text-gray-400 py-2">Tu</div>
+			<div class="text-center text-xs font-medium text-gray-500 dark:text-gray-400 py-2">We</div>
+			<div class="text-center text-xs font-medium text-gray-500 dark:text-gray-400 py-2">Th</div>
+			<div class="text-center text-xs font-medium text-gray-500 dark:text-gray-400 py-2">Fr</div>
+			<div class="text-center text-xs font-medium text-gray-500 dark:text-gray-400 py-2">Sa</div>
+			<div class="text-center text-xs font-medium text-gray-500 dark:text-gray-400 py-2">Su</div>
+		</div>
+
+		<!-- Calendar grid -->
+		<div class="grid grid-cols-7 gap-1">
+			<template x-for="(dayObj, index) in daysInMonth" :key="index">
+				<button
+					@click="dayObj.isCurrentMonth && selectDate(dayObj.dateStr)"
+					type="button"
+					:disabled="!dayObj.isCurrentMonth"
+					class="aspect-square flex items-center justify-center text-sm rounded-lg transition-colors"
+					:class="{
+						'text-gray-400 dark:text-gray-600': !dayObj.isCurrentMonth,
+						'text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700': dayObj.isCurrentMonth && !dayObj.isSelected,
+						'text-red-500 dark:text-red-400': dayObj.isCurrentMonth && dayObj.isWeekend && !dayObj.isSelected,
+						'bg-indigo-600 text-white hover:bg-indigo-700': dayObj.isSelected,
+						'cursor-pointer': dayObj.isCurrentMonth,
+						'cursor-default': !dayObj.isCurrentMonth
+					}"
+					x-text="dayObj.day"
+				></button>
+			</template>
+		</div>
+	</div>
+}

@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+/* Alpine.js x-cloak - Prevents flash of content before Alpine loads */
+[x-cloak] {
+	display: none !important;
+}

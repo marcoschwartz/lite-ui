@@ -1,15 +1,317 @@
 package components
 
-// DatePicker - Date and time picker component
+import (
+	"fmt"
+)
+
+// DatePicker - Custom date/time picker using our Calendar component and custom time selectors
+// For date type, shows a custom calendar popup
+// For time type, shows custom hour/minute selectors
+// For datetime-local, shows both calendar and time selectors
 templ DatePicker(label string, name string, value string, inputType string, required bool, attrs templ.Attributes) {
-	if label != "" {
+	if inputType == "date" {
+		// Use custom calendar picker for date inputs
 		<div>
-			<label for={ name } class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-				{ label }
-				if required {
-					<span class="text-red-500">*</span>
+			if label != "" {
+				<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+					{ label }
+					if required {
+						<span class="text-red-500">*</span>
+					}
+				</label>
+			}
+			<div
+				x-data={
+					fmt.Sprintf(`{
+						open: false,
+						selectedDate: '%s',
+						displayDate: '%s',
+						formatDate(dateStr) {
+							if (!dateStr) return '';
+							const d = new Date(dateStr);
+							return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+						},
+						init() {
+							if (this.selectedDate) {
+								this.displayDate = this.formatDate(this.selectedDate);
+							}
+							this.$watch('selectedDate', value => {
+								this.displayDate = this.formatDate(value);
+							});
+						}
+					}`, value, value),
 				}
-			</label>
+				class="relative"
+			>
+				<!-- Input Field -->
+				<button
+					@click="open = !open"
+					@click.away="open = false"
+					type="button"
+					class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-left flex items-center justify-between"
+				>
+					<span x-text="displayDate || 'Select a date'" :class="!displayDate && 'text-gray-400 dark:text-gray-500'"></span>
+					<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+					</svg>
+				</button>
+				<!-- Calendar Dropdown -->
+				<div
+					x-show="open"
+					x-cloak
+					x-transition
+					class="absolute z-50 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
+					@date-selected.window="if ($event.detail.name === '{ name }') { selectedDate = $event.detail.date; open = false; }"
+				>
+					@Calendar(name, value)
+				</div>
+			</div>
+		</div>
+	} else if inputType == "time" {
+		// Custom time picker
+		<div>
+			if label != "" {
+				<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+					{ label }
+					if required {
+						<span class="text-red-500">*</span>
+					}
+				</label>
+			}
+			<div
+				x-data={
+					fmt.Sprintf(`{
+						open: false,
+						hours: '%s',
+						minutes: '%s',
+						period: '%s',
+						get displayTime() {
+							if (!this.hours || !this.minutes) return 'Select time';
+							return this.hours.padStart(2, '0') + ':' + this.minutes.padStart(2, '0') + ' ' + this.period;
+						},
+						updateTime() {
+							let hour24 = parseInt(this.hours);
+							if (this.period === 'PM' && hour24 !== 12) hour24 += 12;
+							if (this.period === 'AM' && hour24 === 12) hour24 = 0;
+							const timeStr = String(hour24).padStart(2, '0') + ':' + this.minutes.padStart(2, '0');
+							document.getElementById('%s').value = timeStr;
+							document.getElementById('%s').dispatchEvent(new Event('change'));
+						},
+						init() {
+							if ('%s') {
+								const parts = '%s'.split(':');
+								let hour = parseInt(parts[0]) || 12;
+								this.period = hour >= 12 ? 'PM' : 'AM';
+								if (hour === 0) hour = 12;
+								if (hour > 12) hour -= 12;
+								this.hours = String(hour);
+								this.minutes = parts[1] || '00';
+							} else {
+								this.hours = '12';
+								this.minutes = '00';
+								this.period = 'PM';
+							}
+						}
+					}`, get12Hours(value), getMinutes(value), getPeriod(value), name, name, value, value),
+				}
+				class="relative"
+			>
+				<input type="hidden" id={ name } name={ name } value={ value }/>
+				<button
+					@click="open = !open"
+					@click.away="open = false"
+					type="button"
+					class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-left flex items-center justify-between"
+				>
+					<span x-text="displayTime" :class="!hours && 'text-gray-400 dark:text-gray-500'"></span>
+					<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+					</svg>
+				</button>
+				<!-- Time Picker Dropdown -->
+				<div
+					x-show="open"
+					x-cloak
+					x-transition
+					class="absolute z-50 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-6"
+				>
+					<div class="flex gap-4">
+						<!-- Hours -->
+						<div class="flex-1">
+							<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 text-center">Hours</label>
+							<div class="h-48 overflow-y-scroll scrollbar-hide border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-900">
+								for i := 1; i <= 12; i++ {
+									<button
+										type="button"
+										@click={ fmt.Sprintf("hours = '%d'; updateTime()", i) }
+										:class={ fmt.Sprintf("hours === '%d' ? 'bg-indigo-500 text-white font-semibold' : 'hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100'", i) }
+										class="w-full px-4 py-2.5 text-base transition-colors"
+									>
+										{ fmt.Sprintf("%02d", i) }
+									</button>
+								}
+							</div>
+						</div>
+						<!-- Minutes -->
+						<div class="flex-1">
+							<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 text-center">Minutes</label>
+							<div class="h-48 overflow-y-scroll scrollbar-hide border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-900">
+								for i := 0; i < 60; i += 5 {
+									<button
+										type="button"
+										@click={ fmt.Sprintf("minutes = '%02d'; updateTime()", i) }
+										:class={ fmt.Sprintf("minutes === '%02d' ? 'bg-indigo-500 text-white font-semibold' : 'hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100'", i) }
+										class="w-full px-4 py-2.5 text-base transition-colors"
+									>
+										{ fmt.Sprintf("%02d", i) }
+									</button>
+								}
+							</div>
+						</div>
+					</div>
+					<!-- AM/PM Toggle -->
+					<div class="flex gap-2 mt-4">
+						<button
+							type="button"
+							@click="period = 'AM'; updateTime()"
+							:class="period === 'AM' ? 'bg-indigo-500 text-white font-semibold' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'"
+							class="flex-1 px-4 py-2 rounded-lg transition-colors"
+						>
+							AM
+						</button>
+						<button
+							type="button"
+							@click="period = 'PM'; updateTime()"
+							:class="period === 'PM' ? 'bg-indigo-500 text-white font-semibold' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100'"
+							class="flex-1 px-4 py-2 rounded-lg transition-colors"
+						>
+							PM
+						</button>
+					</div>
+					<button
+						@click="open = false"
+						type="button"
+						class="w-full mt-4 px-4 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 font-medium text-base transition-colors"
+					>
+						Done
+					</button>
+				</div>
+			</div>
+		</div>
+	} else if inputType == "datetime-local" {
+		// Custom datetime picker (calendar + time)
+		<div>
+			if label != "" {
+				<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+					{ label }
+					if required {
+						<span class="text-red-500">*</span>
+					}
+				</label>
+			}
+			<div
+				x-data={
+					fmt.Sprintf(`{
+						open: false,
+						selectedDate: '%s',
+						timeInput: '%s',
+						get displayDateTime() {
+							if (!this.selectedDate) return 'Select date and time';
+							const d = new Date(this.selectedDate);
+							const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+							const timeStr = this.timeInput || '12:00';
+							return dateStr + ' ' + timeStr;
+						},
+						updateDateTime() {
+							if (this.selectedDate && this.timeInput) {
+								const dateTimeStr = this.selectedDate + 'T' + this.timeInput;
+								document.getElementById('%s').value = dateTimeStr;
+								document.getElementById('%s').dispatchEvent(new Event('change'));
+							}
+						},
+						updateTimeFromInput() {
+							this.updateDateTime();
+						},
+						init() {
+							if ('%s') {
+								const parts = '%s'.split('T');
+								this.selectedDate = parts[0] || '';
+								this.timeInput = parts[1] ? parts[1].substring(0, 5) : '12:00';
+							}
+						}
+					}`, getDatePart(value), getTimePart(value), name, name, value, value),
+				}
+				class="relative"
+				@click.away="open = false"
+			>
+				<input type="hidden" id={ name } name={ name } value={ value }/>
+				<button
+					@click="open = !open"
+					type="button"
+					class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-left flex items-center justify-between"
+				>
+					<span x-text="displayDateTime" :class="!selectedDate && 'text-gray-400 dark:text-gray-500'"></span>
+					<svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+					</svg>
+				</button>
+				<!-- DateTime Picker Dropdown -->
+				<div
+					x-show="open"
+					x-cloak
+					x-transition
+					@click.stop
+					class="absolute z-50 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-6"
+					@date-selected.window={ fmt.Sprintf("if ($event.detail.name === '%s_date') { selectedDate = $event.detail.date; updateDateTime(); }", name) }
+				>
+					<div class="flex flex-col gap-4">
+						<!-- Calendar Section -->
+						<div>
+							@Calendar(name + "_date", getDatePart(value))
+						</div>
+						<!-- Time Input Section -->
+						<div class="flex items-center gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+							<input
+								type="time"
+								x-model="timeInput"
+								@input="updateTimeFromInput()"
+								class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent [color-scheme:light] dark:[color-scheme:dark]"
+							/>
+							<button
+								@click="open = false"
+								type="button"
+								class="px-6 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 font-medium transition-colors"
+							>
+								✓
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	} else {
+		// Fall back to native inputs for other types
+		if label != "" {
+			<div>
+				<label for={ name } class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+					{ label }
+					if required {
+						<span class="text-red-500">*</span>
+					}
+				</label>
+				<input
+					type={ inputType }
+					id={ name }
+					name={ name }
+					value={ value }
+					if required {
+						required
+					}
+					class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+					{ attrs... }
+				/>
+			</div>
+		} else {
 			<input
 				type={ inputType }
 				id={ name }
@@ -18,21 +320,102 @@ templ DatePicker(label string, name string, value string, inputType string, requ
 				if required {
 					required
 				}
-				class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent [color-scheme:light] dark:[color-scheme:dark]"
+				class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
 				{ attrs... }
 			/>
-		</div>
-	} else {
-		<input
-			type={ inputType }
-			id={ name }
-			name={ name }
-			value={ value }
-			if required {
-				required
-			}
-			class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent [color-scheme:light] dark:[color-scheme:dark]"
-			{ attrs... }
-		/>
+		}
 	}
+}
+
+// Helper functions to parse datetime values
+func getHours(value string) string {
+	if value == "" {
+		return "12"
+	}
+	// Handle time format (HH:MM)
+	if len(value) >= 5 && value[2] == ':' {
+		return value[0:2]
+	}
+	// Handle datetime format (YYYY-MM-DDTHH:MM)
+	if len(value) >= 16 && value[10] == 'T' {
+		return value[11:13]
+	}
+	return "12"
+}
+
+func get12Hours(value string) string {
+	hour24 := getHours(value)
+	if hour24 == "" {
+		return "12"
+	}
+	h := 12
+	if len(hour24) >= 2 {
+		h = int(hour24[0]-'0')*10 + int(hour24[1]-'0')
+	}
+	if h == 0 {
+		return "12"
+	}
+	if h > 12 {
+		h -= 12
+	}
+	if h < 10 {
+		return string(rune('0' + h))
+	}
+	return string(rune('0'+h/10)) + string(rune('0'+h%10))
+}
+
+func getPeriod(value string) string {
+	hour24 := getHours(value)
+	if hour24 == "" {
+		return "PM"
+	}
+	h := 0
+	if len(hour24) >= 2 {
+		h = int(hour24[0]-'0')*10 + int(hour24[1]-'0')
+	}
+	if h >= 12 {
+		return "PM"
+	}
+	return "AM"
+}
+
+func getMinutes(value string) string {
+	if value == "" {
+		return "00"
+	}
+	// Handle time format (HH:MM)
+	if len(value) >= 5 && value[2] == ':' {
+		return value[3:5]
+	}
+	// Handle datetime format (YYYY-MM-DDTHH:MM)
+	if len(value) >= 16 && value[10] == 'T' {
+		return value[14:16]
+	}
+	return "00"
+}
+
+func getDatePart(value string) string {
+	if value == "" {
+		return ""
+	}
+	// Handle datetime format (YYYY-MM-DDTHH:MM)
+	if len(value) >= 10 {
+		return value[0:10]
+	}
+	return value
+}
+
+func getTimePart(value string) string {
+	if value == "" {
+		return "12:00"
+	}
+	// Handle datetime format (YYYY-MM-DDTHH:MM)
+	if len(value) >= 16 && value[10] == 'T' {
+		return value[11:16]
+	}
+	// Handle time format (HH:MM)
+	if len(value) >= 5 && value[2] == ':' {
+		return value[0:5]
+	}
+	return "12:00"
 }
