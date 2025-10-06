@@ -93,44 +93,19 @@ templ SidebarHeader() {
 	</div>
 }
 
-// SidebarContent - Navigation and project selector with advanced logic
+// SidebarContent - Navigation menu
 templ SidebarContent(currentPage string) {
 	<div class="flex flex-col h-full">
-		<!-- Project Selector with conditional rendering -->
-		<div class="px-4">
-			if len(getProjects()) > 1 {
-				@ui.ProjectSelector(
-					ui.Project{ID: 1, Name: "Main Project", Slug: "main"},
-					getProjects(),
-				)
-			} else {
-				<div class="text-sm text-gray-500 dark:text-gray-400">No projects available</div>
-			}
-		</div>
-
 		<!-- Navigation Menu -->
 		<nav class="flex-1 px-4 py-6 overflow-y-auto">
 			@ui.Menu(SidebarItems(currentPage), "vertical")
 		</nav>
 
-		<!-- Additional custom section with logic -->
+		<!-- Additional custom section -->
 		<div class="px-4 pb-4">
-			@ui.Card(ui.CardConfig{Variant: "stat", StatLabel: "Components", StatValue: getComponentCount(), StatIcon: ui.IconFolder(), StatColor: "indigo"}, nil)
+			@ui.Card(ui.CardConfig{Variant: "stat", StatLabel: "Components", StatValue: "25+", StatIcon: ui.IconFolder(), StatColor: "indigo"}, nil)
 		</div>
 	</div>
-}
-
-// Helper functions for dynamic content
-func getProjects() []ui.Project {
-	return []ui.Project{
-		{ID: 1, Name: "Main Project", Slug: "main"},
-		{ID: 2, Name: "Development", Slug: "dev"},
-		{ID: 3, Name: "Production", Slug: "prod"},
-	}
-}
-
-func getComponentCount() string {
-	return "50+"
 }
 
 // SidebarFooter - User info

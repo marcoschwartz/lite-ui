@@ -6,52 +6,19 @@ Built with [Templ](https://templ.guide/), [Tailwind CSS](https://tailwindcss.com
 
 ## Features
 
-✨ **25 Production-Ready Components** - Buttons, cards, forms, modals, tables, and more
-🎨 **Tailwind CSS v4** - Modern utility-first styling with dark mode support
-⚡ **HTMX Integration** - Smooth SPA-like experiences with server-side rendering
+✨ **41 Production-Ready Components** - Complete UI toolkit for modern web apps
+🎨 **Tailwind CSS v4** - Modern utility-first styling with dark mode
+⚡ **HTMX Integration** - Smooth SPA-like experiences
 🔧 **Type-Safe** - Full Go type safety with Templ
 📦 **Zero Dependencies** - Only depends on `github.com/a-h/templ`
-🌙 **Dark Mode** - Built-in dark mode toggle and support
-📱 **Responsive** - Mobile-first design with responsive utilities
+🌙 **Dark Mode** - Built-in dark mode support
+📱 **Responsive** - Mobile-first design
 
-## Components
+## Quick Links
 
-### Forms
-- `Button` - Primary, secondary, danger, success variants
-- `TextInput` - Text, email, password, etc.
-- `TextArea` - Multi-line text input
-- `Select` - Dropdown select with options
-- `Checkbox` - Checkbox with label
-- `Switch` - Toggle switch
-- `FormGroup` - Form field wrapper
-
-### Layout
-- `Card` - Versatile card with header, stat variants
-- `Sidebar` - Responsive sidebar with mobile drawer
-- `Navbar` - Top navigation bar
-- `Modal` - Modal dialog overlay
-- `Drawer` - Slide-out drawer
-- `Tabs` - Tabbed content
-
-### Data Display
-- `Table` - Responsive table with mobile cards
-- `Pagination` - Full-featured pagination
-- `Badge` - Status and label badges
-- `Avatar` - User avatars
-- `Timeline` - Event timeline
-- `Stepper` - Multi-step progress indicator
-
-### Feedback
-- `Progress` - Progress bar
-- `Slider` - Range slider
-
-### Navigation
-- `Dropdown` - Dropdown menu
-- `ActionMenu` - Row action menu (for tables)
-
-### Utilities
-- `DarkModeToggle` - Theme switcher
-- `Icons` - Common icon set
+- 📖 **[Component Reference](COMPONENTS.md)** - Complete API documentation for all 41 components
+- 🎨 **[Live Demo](examples/demo-app)** - Interactive component examples
+- 🚀 **[Quick Start](#quick-start)** - Get started in minutes
 
 ## Installation
 
@@ -118,254 +85,67 @@ npx @tailwindcss/cli -i ./static/css/input.css -o ./static/css/output.css --mini
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 ```
 
-## Usage Examples
-
-### Button
+## Usage Example
 
 ```go
-@ui.Button("Save", ui.ButtonPrimary, templ.Attributes{
-    "type": "submit",
-})
-```
+package main
 
-### Card with Header
+import ui "github.com/marcoschwartz/lite-ui/components"
 
-```go
-@ui.Card(ui.CardConfig{
-    Title: "User Profile",
-    HeaderAction: EditButton(),
-}, CardContent())
-```
+templ MyPage() {
+    // Button
+    @ui.Button("Click me", ui.ButtonPrimary, templ.Attributes{})
 
-### Stat Card
+    // Card
+    @ui.Card(ui.CardConfig{Title: "User Profile"}, ProfileContent())
 
-```go
-@ui.Card(ui.CardConfig{
-    Variant: "stat",
-    StatLabel: "Total Users",
-    StatValue: "1,234",
-    StatIcon: ui.IconUsers("indigo"),
-    StatColor: "indigo",
-}, nil)
-```
-
-### Modal
-
-```go
-@ui.Modal("confirm_modal", "Confirm Action",
-    TriggerButton(),
-    ModalContent()
-)
-```
-
-### Sidebar with Custom Types
-
-The sidebar uses a `Project` type. If you have your own project type, create an adapter:
-
-```go
-// Convert your type to ui.Project
-func ToUIProject(p MyProject) ui.Project {
-    return ui.Project{
-        ID:   p.ID,
-        Name: p.Name,
-        Slug: p.Slug,
-    }
+    // Table with actions
+    @ui.Table([]string{"Name", "Email", "Actions"}, UserRows())
 }
 
-// Use in template
-@ui.Sidebar(
-    items,
-    userName,
-    userEmail,
-    userAvatar,
-    ToUIProject(currentProject),
-    ToUIProjects(projects),
-)
-```
-
-### Table with Pagination
-
-```go
-@ui.Table(
-    []string{"Name", "Email", "Status"},
-    TableRows(users),
-)
-
-@ui.Pagination(ui.PaginationConfig{
-    CurrentPage: page,
-    TotalPages:  totalPages,
-    TotalItems:  totalItems,
-    PerPage:     10,
-    BasePath:    "/users",
-})
-```
-
-### Table with Action Menu
-
-Use the `ActionMenu` component for table row actions. It automatically handles positioning to avoid clipping:
-
-```go
-<tr>
-    <td class="px-6 py-4">John Doe</td>
-    <td class="px-6 py-4">john@example.com</td>
-    <td class="px-6 py-4">
-        @ui.ActionMenu([]ui.ActionMenuItem{
-            {Label: "Edit", Href: "/edit/1"},
-            {Label: "View Details", Href: "/view/1"},
-            {Label: "Delete", Href: "/delete/1", Danger: true, Divider: true},
-        })
-    </td>
-</tr>
-```
-
-The `ActionMenu` uses fixed positioning to prevent clipping by table containers.
-
-## Component API
-
-### Button
-
-```go
-type ButtonVariant string
-
-const (
-    ButtonPrimary   ButtonVariant = "primary"
-    ButtonSecondary ButtonVariant = "secondary"
-    ButtonDanger    ButtonVariant = "danger"
-    ButtonSuccess   ButtonVariant = "success"
-)
-
-templ Button(text string, variant ButtonVariant, attrs templ.Attributes)
-```
-
-### Card
-
-```go
-type CardConfig struct {
-    // Header
-    Title        string
-    HeaderAction templ.Component
-
-    // Stat variant
-    Variant    string // "stat"
-    StatLabel  string
-    StatValue  string
-    StatIcon   templ.Component
-    StatColor  string // "indigo", "green", "purple", etc.
-
-    // Layout
-    Padding string // "none" for no padding
+templ UserRows() {
+    <tr>
+        <td class="px-6 py-4">John Doe</td>
+        <td class="px-6 py-4">john@example.com</td>
+        <td class="px-6 py-4">
+            @ui.ActionMenu([]ui.ActionMenuItem{
+                {Label: "Edit", Href: "/edit/1"},
+                {Label: "Delete", Href: "/delete/1", Danger: true, Divider: true},
+            })
+        </td>
+    </tr>
 }
-
-templ Card(config CardConfig, content templ.Component)
 ```
 
-### Sidebar
+For detailed component API documentation, see **[COMPONENTS.md](COMPONENTS.md)**.
 
-```go
-type Project struct {
-    ID   int
-    Name string
-    Slug string
+## Important Notes
+
+### x-cloak CSS (Required)
+
+**You must include this CSS** to prevent component flashing:
+
+```css
+[x-cloak] {
+    display: none !important;
 }
-
-type SidebarItem struct {
-    Label  string
-    Href   string
-    Icon   templ.Component
-    Active bool
-    Badge  string
-}
-
-templ Sidebar(
-    items []SidebarItem,
-    userName string,
-    userEmail string,
-    userAvatar string,
-    currentProject Project,
-    projects []Project,
-)
 ```
 
-### Pagination
+Without this, dropdowns, modals, and other interactive components will briefly flash before Alpine.js loads.
 
-```go
-type PaginationConfig struct {
-    CurrentPage int
-    TotalPages  int
-    TotalItems  int
-    PerPage     int
-    BasePath    string // e.g., "/users"
-}
+### Dark Mode
 
-templ Pagination(config PaginationConfig)
-```
-
-### ActionMenu
-
-```go
-type ActionMenuItem struct {
-    Label   string
-    Href    string
-    Danger  bool // Style as dangerous action (red)
-    Divider bool // Show divider before this item
-}
-
-templ ActionMenu(items []ActionMenuItem)
-```
-
-## Dark Mode
-
-Lite UI includes automatic dark mode support using Tailwind's dark mode classes.
-
-Add the dark mode script to your HTML:
+Add this script to enable dark mode:
 
 ```html
 <script>
     const theme = localStorage.getItem('theme') ||
         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-    }
+    if (theme === 'dark') document.documentElement.classList.add('dark');
 </script>
 ```
 
-Use the dark mode toggle component:
-
-```go
-@ui.DarkModeToggle()
-```
-
-## Alpine.js Integration
-
-Lite UI components use Alpine.js for interactivity and include `x-cloak` attributes to prevent content flashing before Alpine initializes.
-
-**Required CSS:** You must include this CSS rule in your stylesheet (see Setup step 2):
-
-```css
-[x-cloak] {
-	display: none !important;
-}
-```
-
-**How it works:** Components with dropdown menus, modals, drawers, accordions, tabs, carousels, and tooltips use `x-cloak` to remain hidden until Alpine.js loads. This ensures a smooth, flash-free user experience.
-
-**Without this CSS rule:** Users will briefly see hidden content (dropdowns, modals, etc.) before Alpine.js initializes and hides them, creating an unpleasant visual flash.
-
-## HTMX Integration
-
-Components are designed to work seamlessly with HTMX for dynamic interactions:
-
-```go
-<a
-    href="/users"
-    hx-get="/users"
-    hx-target="body"
-    hx-swap="outerHTML transition:true"
-    hx-push-url="true"
->
-    Users
-</a>
-```
+Then use the toggle: `@ui.DarkModeToggle()`
 
 ## Contributing
 

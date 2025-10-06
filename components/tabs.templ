@@ -32,7 +32,16 @@ templ Tabs(id string, tabs []Tab) {
 		<!-- Tab Panels -->
 		<div class="mt-6">
 			for _, tab := range tabs {
-				<div x-cloak x-show={ fmt.Sprintf("activeTab === '%s'", tab.ID) }>
+				<div
+					x-cloak
+					x-show={ fmt.Sprintf("activeTab === '%s'", tab.ID) }
+					x-transition:enter="transition ease-out duration-150"
+					x-transition:enter-start="opacity-0"
+					x-transition:enter-end="opacity-100"
+					x-transition:leave="transition ease-in duration-100"
+					x-transition:leave-start="opacity-100"
+					x-transition:leave-end="opacity-0"
+				>
 					@tab.Content
 				</div>
 			}

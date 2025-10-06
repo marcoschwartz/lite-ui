@@ -56,22 +56,237 @@ templ BreadcrumbsDemo() {
 
 templ TabsDemo() {
 	@ui.Tabs("nav-tabs", []ui.Tab{
-		{ID: "tab1", Label: "Overview", Content: Tab1Content()},
-		{ID: "tab2", Label: "Details", Content: Tab2Content()},
-		{ID: "tab3", Label: "Settings", Content: Tab3Content()},
+		{ID: "forms", Label: "Forms", Content: TabFormsContent()},
+		{ID: "display", Label: "Data Display", Content: TabDataDisplayContent()},
+		{ID: "feedback", Label: "Feedback", Content: TabFeedbackContent()},
+		{ID: "layout", Label: "Layout", Content: TabLayoutContent()},
 	})
 }
 
-templ Tab1Content() {
-	<p class="text-gray-600 dark:text-gray-400">This is the overview tab content.</p>
+templ TabFormsContent() {
+	<div class="space-y-6">
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+			<!-- Text Inputs -->
+			<div>
+				@ui.TextInput("Email", "email", "email", "Enter your email", true, templ.Attributes{})
+			</div>
+			<div>
+				@ui.TextInput("Password", "password", "password", "Enter password", true, templ.Attributes{})
+			</div>
+		</div>
+
+		<!-- TextArea -->
+		<div>
+			@ui.TextArea("Description", "description", "Enter a description...", 4, false, templ.Attributes{})
+		</div>
+
+		<!-- Select -->
+		<div>
+			@ui.Select("Country", "country", "Select a country", false, []ui.SelectOption{
+				{Value: "us", Label: "United States"},
+				{Value: "uk", Label: "United Kingdom"},
+				{Value: "ca", Label: "Canada"},
+			})
+		</div>
+
+		<!-- Checkboxes and Switch -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+			<div class="space-y-3">
+				@ui.Checkbox("Accept terms and conditions", "terms", false, templ.Attributes{})
+				@ui.Checkbox("Subscribe to newsletter", "newsletter", true, templ.Attributes{})
+			</div>
+			<div class="space-y-3">
+				@ui.Switch("notifications", "Enable notifications", "Receive push notifications", true, templ.Attributes{})
+				@ui.Toggle("Dark mode", "theme", false, templ.Attributes{})
+			</div>
+		</div>
+
+		<!-- Buttons -->
+		<div class="flex gap-3">
+			@ui.Button("Primary", ui.ButtonPrimary, templ.Attributes{})
+			@ui.Button("Secondary", ui.ButtonSecondary, templ.Attributes{})
+			@ui.Button("Success", ui.ButtonSuccess, templ.Attributes{})
+			@ui.Button("Danger", ui.ButtonDanger, templ.Attributes{})
+		</div>
+	</div>
 }
 
-templ Tab2Content() {
-	<p class="text-gray-600 dark:text-gray-400">This is the details tab content.</p>
+templ TabDataDisplayContent() {
+	<div class="space-y-6">
+		<!-- Badges -->
+		<div>
+			<h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Badges</h4>
+			<div class="flex flex-wrap gap-2">
+				@ui.Badge("Active", "green")
+				@ui.Badge("Pending", "yellow")
+				@ui.Badge("Error", "red")
+				@ui.Badge("Info", "blue")
+				@ui.Badge("Default", "gray")
+			</div>
+		</div>
+
+		<!-- Avatars -->
+		<div>
+			<h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Avatars</h4>
+			<div class="flex items-center gap-3">
+				@ui.Avatar("https://i.pravatar.cc/150?img=1", "User 1", "xs")
+				@ui.Avatar("https://i.pravatar.cc/150?img=2", "User 2", "sm")
+				@ui.Avatar("https://i.pravatar.cc/150?img=3", "User 3", "md")
+				@ui.Avatar("https://i.pravatar.cc/150?img=4", "User 4", "lg")
+				@ui.Avatar("https://i.pravatar.cc/150?img=5", "User 5", "xl")
+			</div>
+		</div>
+
+		<!-- Mini Table -->
+		<div>
+			<h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Table Example</h4>
+			@ui.Table([]string{"Name", "Status", "Role"}, TabTableRows())
+		</div>
+
+		<!-- Timeline -->
+		<div>
+			<h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Timeline</h4>
+			@ui.Timeline([]ui.TimelineItem{
+				{Title: "Order placed", Description: "Your order was placed", Time: "2h ago", Icon: ui.IconCheck("green"), Color: "green"},
+				{Title: "Processing", Description: "Order is being processed", Time: "1h ago", Icon: ui.IconClock(), Color: "blue"},
+			})
+		</div>
+	</div>
 }
 
-templ Tab3Content() {
-	<p class="text-gray-600 dark:text-gray-400">This is the settings tab content.</p>
+templ TabTableRows() {
+	<tr>
+		<td class="px-6 py-4 text-gray-900 dark:text-gray-100">John Doe</td>
+		<td class="px-6 py-4">@ui.Badge("Active", "green")</td>
+		<td class="px-6 py-4 text-gray-900 dark:text-gray-100">Admin</td>
+	</tr>
+	<tr>
+		<td class="px-6 py-4 text-gray-900 dark:text-gray-100">Jane Smith</td>
+		<td class="px-6 py-4">@ui.Badge("Away", "yellow")</td>
+		<td class="px-6 py-4 text-gray-900 dark:text-gray-100">User</td>
+	</tr>
+}
+
+templ TabFeedbackContent() {
+	<div class="space-y-6">
+		<!-- Alerts -->
+		<div class="space-y-3">
+			@ui.Alert("success", "Success", "This is a success message!", true)
+			@ui.Alert("info", "Information", "This is an info message!", true)
+			@ui.Alert("warning", "Warning", "This is a warning message!", true)
+			@ui.Alert("error", "Error", "This is an error message!", true)
+		</div>
+
+		<!-- Progress Bars -->
+		<div class="space-y-4">
+			<div>
+				<h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Progress Indicators</h4>
+				@ui.Progress(25, 100, "md", "indigo", true)
+			</div>
+			<div>
+				@ui.Progress(50, 100, "md", "green", true)
+			</div>
+			<div>
+				@ui.Progress(75, 100, "md", "yellow", true)
+			</div>
+			<div>
+				@ui.Progress(100, 100, "md", "red", true)
+			</div>
+		</div>
+
+		<!-- Loading States -->
+		<div>
+			<h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Loading Spinners</h4>
+			<div class="flex items-center gap-4">
+				@ui.Loading("sm", "indigo")
+				@ui.Loading("md", "green")
+				@ui.Loading("lg", "blue")
+			</div>
+		</div>
+
+		<!-- Slider -->
+		<div>
+			<h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Slider</h4>
+			@ui.Slider("Volume", "volume", 0, 100, 50, 1, templ.Attributes{})
+		</div>
+	</div>
+}
+
+templ TabLayoutContent() {
+	<div class="space-y-6">
+		<!-- Stat Cards -->
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+			@ui.Card(ui.CardConfig{
+				Variant:   "stat",
+				StatLabel: "Total Users",
+				StatValue: "2,543",
+				StatIcon:  ui.IconUsers("indigo"),
+				StatColor: "indigo",
+			}, nil)
+
+			@ui.Card(ui.CardConfig{
+				Variant:   "stat",
+				StatLabel: "Revenue",
+				StatValue: "$12,345",
+				StatIcon:  ui.IconCurrency("green"),
+				StatColor: "green",
+			}, nil)
+
+			@ui.Card(ui.CardConfig{
+				Variant:   "stat",
+				StatLabel: "Growth",
+				StatValue: "+24%",
+				StatIcon:  ui.IconTrending("purple"),
+				StatColor: "purple",
+			}, nil)
+		</div>
+
+		<!-- Regular Cards -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			@ui.Card(ui.CardConfig{
+				Title: "Card with Header",
+			}, CardExampleContent())
+
+			@ui.Card(ui.CardConfig{
+				Title:        "Card with Action",
+				HeaderAction: CardHeaderAction(),
+			}, CardExampleContent())
+		</div>
+
+		<!-- Divider -->
+		<div>
+			@ui.Divider("horizontal", "Layout Components")
+		</div>
+
+		<!-- Accordion -->
+		<div>
+			@ui.Accordion([]ui.AccordionItem{
+				{ID: "acc1", Title: "What is Lite UI?", Content: AccordionContent1()},
+				{ID: "acc2", Title: "How to install?", Content: AccordionContent2()},
+				{ID: "acc3", Title: "Is it free?", Content: AccordionContent3()},
+			}, false)
+		</div>
+	</div>
+}
+
+templ CardExampleContent() {
+	<p class="text-gray-600 dark:text-gray-400">This is example card content with some text to demonstrate the card component.</p>
+}
+
+templ CardHeaderAction() {
+	@ui.Button("Edit", ui.ButtonSecondary, templ.Attributes{"class": "text-sm px-3 py-1"})
+}
+
+templ AccordionContent1() {
+	<p class="text-gray-600 dark:text-gray-400">Lite UI is a lightweight UI component library for Go + Templ applications with 41 production-ready components.</p>
+}
+
+templ AccordionContent2() {
+	<p class="text-gray-600 dark:text-gray-400">Run: <code class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">go get github.com/marcoschwartz/lite-ui@latest</code></p>
+}
+
+templ AccordionContent3() {
+	<p class="text-gray-600 dark:text-gray-400">Yes! Lite UI is completely free and open source under the MIT license.</p>
 }
 
 templ PaginationDemo() {
