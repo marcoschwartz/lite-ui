@@ -2,29 +2,63 @@ package components
 
 import "fmt"
 
+// SelectConfig - Configuration for Select component
+type SelectConfig struct {
+	Label        string
+	Name         string
+	Placeholder  string
+	Required     bool
+	DefaultValue string // Initial selected value
+	OnChange     string // Alpine.js expression or JavaScript to run on change (e.g., "handleChange($event)")
+}
+
 // Select - Custom select component with Alpine.js and Tailwind
 templ Select(label string, name string, placeholder string, required bool, options []SelectOption) {
+	@SelectWithConfig(SelectConfig{
+		Label:       label,
+		Name:        name,
+		Placeholder: placeholder,
+		Required:    required,
+	}, options)
+}
+
+// SelectWithConfig - Select with full configuration support
+templ SelectWithConfig(config SelectConfig, options []SelectOption) {
 	<div>
-		if label != "" {
-			<label for={ name } class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-				{ label }
-				if required {
+		if config.Label != "" {
+			<label for={ config.Name } class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+				{ config.Label }
+				if config.Required {
 					<span class="text-red-500">*</span>
 				}
 			</label>
 		}
 
 		<div
-			x-data="{
-				open: false,
-				selected: '',
-				selectedLabel: ''
-			}"
+			x-data={
+				fmt.Sprintf(`{
+					open: false,
+					selected: '%s',
+					selectedLabel: %s,
+					init() {
+						if (this.selected) {
+							const option = %s.find(o => o.value === this.selected);
+							if (option) this.selectedLabel = option.label;
+						}
+					}
+				}`,
+				config.DefaultValue,
+				getInitialLabel(config.DefaultValue, options),
+				optionsToJSON(options))
+			}
+			if config.OnChange != "" {
+				@change={ config.OnChange }
+			}
 			@click.away="open = false"
 			class="relative"
 		>
 			<!-- Hidden input for form submission -->
-			<input type="hidden" name={ name } x-model="selected" if required { required }/>
+			<input type="hidden" name={ config.Name } x-model="selected" if config.Required { required }/>
 
 			<!-- Custom Select Button -->
 			<button
@@ -33,14 +67,16 @@ templ Select(label string, name string, placeholder string, required bool, optio
 				class="relative w-full cursor-pointer rounded-md bg-white dark:bg-gray-700 py-2.5 pl-3 pr-10 text-left text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm transition-all hover:ring-gray-400 dark:hover:ring-gray-500"
 			>
 				<span
-					class="block truncate"
-					x-text={ fmt.Sprintf("selectedLabel || '%s'", placeholder) }
+					x-cloak
+				class="block truncate"
+					x-text={ fmt.Sprintf("selectedLabel || '%s'", config.Placeholder) }
 					:class="{ 'text-gray-400 dark:text-gray-500': !selectedLabel }"
 				>
 				</span>
 				<span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
 					<svg
-						class="h-5 w-5 text-gray-400 dark:text-gray-500 transition-transform"
+						x-cloak
+					class="h-5 w-5 text-gray-400 dark:text-gray-500 transition-transform"
 						:class="{ 'rotate-180': open }"
 						viewBox="0 0 20 20"
 						fill="currentColor"
@@ -108,4 +144,38 @@ templ SelectOptionItem(option SelectOption) {
 type SelectOption struct {
 	Value string
 	Label string
+}
+
+// Helper functions for Select component
+func getInitialLabel(defaultValue string, options []SelectOption) string {
+	if defaultValue == "" {
+		return "''"
+	}
+	for _, opt := range options {
+		if opt.Value == defaultValue {
+			return fmt.Sprintf("'%s'", opt.Label)
+		}
+	}
+	return "''"
+}
+
+func optionsToJSON(options []SelectOption) string {
+	if len(options) == 0 {
+		return "[]"
+	}
+
+	var jsonParts []string
+	for _, opt := range options {
+		jsonParts = append(jsonParts, fmt.Sprintf(`{value: '%s', label: '%s'}`, opt.Value, opt.Label))
+	}
+
+	result := "["
+	for i, part := range jsonParts {
+		if i > 0 {
+			result += ", "
+		}
+		result += part
+	}
+	result += "]"
+	return result
 }

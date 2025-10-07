@@ -5,6 +5,20 @@ All notable changes to Lite UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.13] - 2025-10-07
+
+### Added
+- Added SelectConfig with DefaultValue and OnChange support to Select component
+- Added helper functions getInitialLabel() and optionsToJSON() for Select state initialization
+- Added SelectWithConfig() function for advanced Select configuration
+
+### Changed
+- Removed fade transitions from Tabs component for instant content switching
+- Select component now supports initial value selection and custom onChange handlers
+
+### Fixed
+- Fixed Select component x-cloak coverage on button span and SVG elements
+
 ## [0.1.12] - 2025-01-07
 
 ### Fixed
