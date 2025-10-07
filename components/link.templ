@@ -1,0 +1,44 @@
+package components
+
+// Link - Generic SPA-style link component with HTMX (like Next.js Link)
+// Wraps any children with SPA navigation. Works with text, buttons, divs, icons, etc.
+//
+// Usage:
+//   @ui.Link("/about", templ.Attributes{}) {
+//       <span>About Us</span>
+//   }
+//
+//   @ui.Link("/profile", templ.Attributes{"class": "text-blue-600 hover:underline"}) {
+//       @ProfileIcon()
+//       <span>My Profile</span>
+//   }
+//
+//   @ui.Link("/products", templ.Attributes{}) {
+//       @ui.Button("View Products", ui.ButtonPrimary, templ.Attributes{})
+//   }
+//
+// For external links (no SPA navigation), add "external" attribute:
+//   @ui.Link("https://example.com", templ.Attributes{"external": "true", "target": "_blank"}) {
+//       <span>External Site</span>
+//   }
+templ Link(href string, attrs templ.Attributes) {
+	if attrs["external"] == "true" {
+		<a
+			href={ templ.URL(href) }
+			{ attrs... }
+		>
+			{ children... }
+		</a>
+	} else {
+		<a
+			href={ templ.URL(href) }
+			hx-get={ href }
+			hx-target="body"
+			hx-swap="outerHTML"
+			hx-push-url="true"
+			{ attrs... }
+		>
+			{ children... }
+		</a>
+	}
+}

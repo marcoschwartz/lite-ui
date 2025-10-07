@@ -47,6 +47,11 @@ templ NavigationPage() {
 			<div class="mb-8">
 				@ui.Card(ui.CardConfig{Title: "Floating Action Buttons"}, FABDemo())
 			</div>
+
+			<!-- Link Component -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Link Component (SPA Navigation)"}, LinkDemo())
+			</div>
 		</div>
 		@ui.SpeedDial(GetSpeedDialActions())
 	}
@@ -397,4 +402,87 @@ func GetSpeedDialActions() []ui.SpeedDialAction {
 			Attrs: templ.Attributes{"onclick": "alert('Show help')"},
 		},
 	}
+}
+
+templ LinkDemo() {
+	<div class="space-y-6">
+		<!-- Simple Text Link -->
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Simple Text Link (SPA)</h3>
+			<p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+				Navigate to
+				@ui.Link("/", templ.Attributes{"class": "text-blue-600 dark:text-blue-400 hover:underline"}) {
+					Home
+				}
+				or
+				@ui.Link("/icons", templ.Attributes{"class": "text-blue-600 dark:text-blue-400 hover:underline"}) {
+					Icons page
+				}
+				with smooth SPA navigation.
+			</p>
+		</div>
+
+		<!-- Link with Icon -->
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Link with Icon</h3>
+			@ui.Link("/feedback", templ.Attributes{"class": "inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:underline"}) {
+				@ui.IconCheck("indigo")
+				<span>View Feedback Components</span>
+			}
+		</div>
+
+		<!-- Button as Link -->
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Button as Link</h3>
+			<div class="flex gap-3">
+				@ui.Link("/inputs", templ.Attributes{}) {
+					@ui.Button("Go to Forms", ui.ButtonPrimary, templ.Attributes{})
+				}
+				@ui.Link("/layout", templ.Attributes{}) {
+					@ui.Button("View Layouts", ui.ButtonSecondary, templ.Attributes{})
+				}
+			</div>
+		</div>
+
+		<!-- Card as Link -->
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Card as Link (Clickable Card)</h3>
+			@ui.Link("/data-display", templ.Attributes{"class": "block hover:shadow-lg transition-shadow"}) {
+				@ui.Card(ui.CardConfig{
+					Variant:   "stat",
+					StatLabel: "Data Display",
+					StatValue: "5+",
+					StatIcon:  ui.IconFolder(),
+					StatColor: "blue",
+				}, nil)
+			}
+		</div>
+
+		<!-- External Link -->
+		<div>
+			<h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">External Link (No SPA)</h3>
+			@ui.Link("https://github.com/marcoschwartz/lite-ui", templ.Attributes{
+				"external": "true",
+				"target":   "_blank",
+				"rel":      "noopener noreferrer",
+				"class":    "inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline",
+			}) {
+				<span>View on GitHub</span>
+				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+				</svg>
+			}
+		</div>
+
+		<!-- Usage Note -->
+		<div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+			<h4 class="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2">💡 Usage</h4>
+			<div class="text-xs text-blue-800 dark:text-blue-200 bg-white dark:bg-gray-900 p-3 rounded overflow-x-auto font-mono">
+				<code>@ui.Link("/path", templ.Attributes{}) { ... }</code>
+			</div>
+			<p class="text-xs text-blue-700 dark:text-blue-300 mt-2">
+				All links above use SPA navigation (no page refresh) except the external link!
+			</p>
+		</div>
+	</div>
 }

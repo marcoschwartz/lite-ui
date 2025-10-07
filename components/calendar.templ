@@ -19,7 +19,10 @@ templ Calendar(name string, selectedDate string) {
 				get daysInMonth() {
 					const year = this.currentMonth.getFullYear();
 					const month = this.currentMonth.getMonth();
-					const firstDay = new Date(year, month, 1).getDay();
+					// Get first day of month (0=Sun, 1=Mon, ..., 6=Sat)
+					const firstDayRaw = new Date(year, month, 1).getDay();
+					// Convert to Monday-first (0=Mon, 1=Tue, ..., 6=Sun)
+					const firstDay = firstDayRaw === 0 ? 6 : firstDayRaw - 1;
 					const lastDate = new Date(year, month + 1, 0).getDate();
 					const prevLastDate = new Date(year, month, 0).getDate();
 
@@ -33,11 +36,13 @@ templ Calendar(name string, selectedDate string) {
 					// Current month days
 					for (let i = 1; i <= lastDate; i++) {
 						const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(i).padStart(2, '0');
-						const dayOfWeek = new Date(year, month, i).getDay();
+						const dayOfWeekRaw = new Date(year, month, i).getDay();
+						// Convert to Monday-first for weekend check (5=Sat, 6=Sun)
+						const dayOfWeek = dayOfWeekRaw === 0 ? 6 : dayOfWeekRaw - 1;
 						days.push({
 							day: i,
 							isCurrentMonth: true,
-							isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
+							isWeekend: dayOfWeek === 5 || dayOfWeek === 6,
 							dateStr: dateStr,
 							isSelected: this.selectedDate === dateStr
 						});

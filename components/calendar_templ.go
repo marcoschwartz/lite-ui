@@ -51,7 +51,10 @@ func Calendar(name string, selectedDate string) templ.Component {
 				get daysInMonth() {
 					const year = this.currentMonth.getFullYear();
 					const month = this.currentMonth.getMonth();
-					const firstDay = new Date(year, month, 1).getDay();
+					// Get first day of month (0=Sun, 1=Mon, ..., 6=Sat)
+					const firstDayRaw = new Date(year, month, 1).getDay();
+					// Convert to Monday-first (0=Mon, 1=Tue, ..., 6=Sun)
+					const firstDay = firstDayRaw === 0 ? 6 : firstDayRaw - 1;
 					const lastDate = new Date(year, month + 1, 0).getDate();
 					const prevLastDate = new Date(year, month, 0).getDate();
 
@@ -65,11 +68,13 @@ func Calendar(name string, selectedDate string) templ.Component {
 					// Current month days
 					for (let i = 1; i <= lastDate; i++) {
 						const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(i).padStart(2, '0');
-						const dayOfWeek = new Date(year, month, i).getDay();
+						const dayOfWeekRaw = new Date(year, month, i).getDay();
+						// Convert to Monday-first for weekend check (5=Sat, 6=Sun)
+						const dayOfWeek = dayOfWeekRaw === 0 ? 6 : dayOfWeekRaw - 1;
 						days.push({
 							day: i,
 							isCurrentMonth: true,
-							isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
+							isWeekend: dayOfWeek === 5 || dayOfWeek === 6,
 							dateStr: dateStr,
 							isSelected: this.selectedDate === dateStr
 						});
@@ -98,7 +103,7 @@ func Calendar(name string, selectedDate string) templ.Component {
 			}`, selectedDate, selectedDate, name, name, name),
 		)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/calendar.templ`, Line: 67, Col: 2}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `calendar.templ`, Line: 72, Col: 2}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -111,7 +116,7 @@ func Calendar(name string, selectedDate string) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/calendar.templ`, Line: 71, Col: 32}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `calendar.templ`, Line: 76, Col: 32}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -124,7 +129,7 @@ func Calendar(name string, selectedDate string) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/calendar.templ`, Line: 71, Col: 46}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `calendar.templ`, Line: 76, Col: 46}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -137,7 +142,7 @@ func Calendar(name string, selectedDate string) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(selectedDate)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/calendar.templ`, Line: 71, Col: 69}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `calendar.templ`, Line: 76, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {

@@ -21,6 +21,7 @@ templ Collapse(title string, content templ.Component, defaultOpen bool) {
 		>
 			<span class="font-medium text-gray-900 dark:text-gray-100">{ title }</span>
 			<svg
+				x-cloak
 				class="w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform"
 				:class="{ 'rotate-180': open }"
 				fill="none"

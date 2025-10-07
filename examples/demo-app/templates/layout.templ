@@ -18,8 +18,8 @@ templ Layout(title string) {
 					document.documentElement.classList.add('dark');
 				}
 			</script>
+			<script src="/static/js/alpine.min.js"></script>
 			<script src="/static/js/htmx.min.js"></script>
-			<script defer src="/static/js/alpine.min.js"></script>
 		</head>
 		<body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
 			@ui.Sidebar(
@@ -132,6 +132,7 @@ func SidebarItems(currentPage string) []ui.SidebarItem {
 		{Label: "Navigation", Href: "/navigation", Icon: ui.IconFolder(), Active: currentPage == "Navigation"},
 		{Label: "Layout & Display", Href: "/layout", Icon: ui.IconChart("gray"), Active: currentPage == "Layout & Display"},
 		{Label: "Data Display", Href: "/data-display", Icon: ui.IconFolder(), Active: currentPage == "Data Display"},
+		{Label: "SSR Test", Href: "/ssr-test", Icon: ui.IconCpu(), Active: currentPage == "SSR Test"},
 	}
 }
 

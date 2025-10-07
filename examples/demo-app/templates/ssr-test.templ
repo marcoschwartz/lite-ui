@@ -1,0 +1,181 @@
+package templates
+
+import ui "github.com/marcoschwartz/lite-ui/components"
+
+templ SSRTestPage() {
+	@Layout("SSR Test") {
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+			<h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">SSR Test</h1>
+			<p class="text-gray-600 dark:text-gray-400 mb-8">
+				Test HTMX with server-side rendering. Click buttons to load data with 1-second delay.
+			</p>
+
+			<!-- Load Users Test -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Load Users (SSR with 1s delay)"}, SSRUsersTest())
+			</div>
+
+			<!-- Load Products Test -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Load Products (SSR with 1s delay)"}, SSRProductsTest())
+			</div>
+
+			<!-- Infinite Scroll Test -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "Infinite Scroll (SSR)"}, SSRInfiniteScrollTest())
+			</div>
+		</div>
+	}
+}
+
+templ SSRUsersTest() {
+	<div>
+		<button
+			hx-get="/api/users"
+			hx-target="#users-result"
+			hx-swap="innerHTML"
+			hx-indicator="#users-spinner"
+			class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
+		>
+			Load Users
+		</button>
+		<div id="users-spinner" class="htmx-indicator inline-block ml-3">
+			@ui.Loading("sm", "indigo")
+		</div>
+		<div id="users-result" class="mt-4"></div>
+	</div>
+}
+
+templ SSRProductsTest() {
+	<div>
+		<button
+			hx-get="/api/products"
+			hx-target="#products-result"
+			hx-swap="innerHTML"
+			hx-indicator="#products-spinner"
+			class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+		>
+			Load Products
+		</button>
+		<div id="products-spinner" class="htmx-indicator inline-block ml-3">
+			@ui.Loading("sm", "purple")
+		</div>
+		<div id="products-result" class="mt-4"></div>
+	</div>
+}
+
+templ SSRInfiniteScrollTest() {
+	<div>
+		<button
+			hx-get="/api/items?page=1"
+			hx-target="#scroll-result"
+			hx-swap="innerHTML"
+			class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors mb-4"
+		>
+			Start Loading Items
+		</button>
+		<div id="scroll-result"></div>
+	</div>
+}
+
+// API Response Templates
+
+templ UsersResponse(users []User) {
+	<div class="space-y-3">
+		for _, user := range users {
+			<div class="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+				<div class="flex items-center gap-3">
+					@ui.Avatar(user.Avatar, user.Name, "md")
+					<div>
+						<h3 class="font-medium text-gray-900 dark:text-gray-100">{ user.Name }</h3>
+						<p class="text-sm text-gray-600 dark:text-gray-400">{ user.Email }</p>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+}
+
+templ ProductsResponse(products []Product) {
+	@ui.List(convertProductsToListItems(products))
+}
+
+templ ItemsResponse(items []Item, page int, hasMore bool) {
+	<div class="space-y-2">
+		for _, item := range items {
+			<div class="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+				<h4 class="font-medium text-gray-900 dark:text-gray-100">{ item.Title }</h4>
+				<p class="text-sm text-gray-600 dark:text-gray-400">{ item.Description }</p>
+			</div>
+		}
+		if hasMore {
+			<div
+				hx-get={ "/api/items?page=" + intToString(page + 1) }
+				hx-trigger="revealed"
+				hx-swap="afterend"
+				hx-indicator="#scroll-spinner"
+				class="text-center py-4"
+			>
+				<div id="scroll-spinner" class="htmx-indicator">
+					@ui.Loading("sm", "green")
+				</div>
+				<p class="text-sm text-gray-500 dark:text-gray-400">Loading more...</p>
+			</div>
+		} else {
+			<p class="text-center text-sm text-gray-500 dark:text-gray-400 py-4">No more items</p>
+		}
+	</div>
+}
+
+// Helper types
+
+type User struct {
+	ID     int
+	Name   string
+	Email  string
+	Avatar string
+}
+
+type Product struct {
+	ID          int
+	Name        string
+	Price       string
+	Category    string
+	IconColor   string
+}
+
+type Item struct {
+	ID          int
+	Title       string
+	Description string
+}
+
+// Helper functions
+
+func convertProductsToListItems(products []Product) []ui.ListItem {
+	items := make([]ui.ListItem, len(products))
+	for i, p := range products {
+		items[i] = ui.ListItem{
+			Title:     p.Name,
+			Subtitle:  p.Price,
+			Metadata:  p.Category,
+			Icon:      ui.IconFolder(),
+			IconColor: p.IconColor,
+		}
+	}
+	return items
+}
+
+func intToString(n int) string {
+	if n < 10 {
+		return string(rune(n + '0'))
+	}
+	// For multi-digit numbers
+	result := ""
+	for n > 0 {
+		digit := n % 10
+		result = string(rune(digit + '0')) + result
+		n = n / 10
+	}
+	return result
+}

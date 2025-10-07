@@ -63,6 +63,7 @@ templ Carousel(id string, items []CarouselItem) {
 		<div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
 			for i := range items {
 				<button
+					x-cloak
 					@click={ "currentSlide = " + fmt.Sprint(i) }
 					class="w-2 h-2 rounded-full transition-all"
 					:class={ "currentSlide === " + fmt.Sprint(i) + " ? 'bg-white w-8' : 'bg-white/50 hover:bg-white/75'" }

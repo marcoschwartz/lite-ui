@@ -2,60 +2,139 @@ package components
 
 // ListItem - Single item in a list
 type ListItem struct {
-	Content  templ.Component
-	Icon     templ.Component // Optional icon
-	Active   bool            // Highlight as active
-	Disabled bool            // Disabled state
-	Href     string          // Optional link
+	Icon       templ.Component    // Optional left icon
+	IconColor  string             // Icon background color: "purple", "blue", "red", "green", "indigo", "pink", "yellow", "gray"
+	Title      string             // File/item name
+	Subtitle   string             // Size, description, etc.
+	Metadata   string             // Date or additional info
+	Thumbnail  string             // Optional thumbnail image URL
+	Actions    templ.Component    // Optional right-side actions (download, menu)
+	Attrs      templ.Attributes   // Additional attributes
+	Active     bool               // Highlight as active/selected
+	Disabled   bool               // Disabled state
+	Href       string             // Optional link
 }
 
-// List - Styled list component
+// List - Modern file browser style list (like your reference design)
 // Usage:
-//   @ui.List(items, "default")  // default, bordered, divided
-templ List(items []ListItem, variant string) {
-	<ul
-		class="w-full"
-		class={ templ.KV("divide-y divide-gray-200 dark:divide-gray-700", variant == "divided") }
-		class={ templ.KV("border border-gray-200 dark:border-gray-700 rounded-lg", variant == "bordered") }
-	>
+//   @ui.List(items)
+templ List(items []ListItem) {
+	<div class="w-full bg-gray-800/40 dark:bg-gray-800/60 rounded-xl overflow-hidden">
 		for _, item := range items {
-			<li
-				class={ templ.KV("border-b border-gray-200 dark:border-gray-700 last:border-0", variant == "bordered") }
-			>
+			<div class="border-b border-gray-700/40 dark:border-gray-700/60 last:border-0">
 				if item.Href != "" && !item.Disabled {
 					<a
 						href={ templ.URL(item.Href) }
-						class="flex items-center gap-3 px-4 py-3 transition-colors"
-						class={ templ.KV("hover:bg-gray-50 dark:hover:bg-gray-800", !item.Disabled) }
-						class={ templ.KV("bg-indigo-50 dark:bg-indigo-900/20", item.Active) }
-						class={ templ.KV("opacity-50 cursor-not-allowed", item.Disabled) }
-					>
-						if item.Icon != nil {
-							<div class="flex-shrink-0">
-								@item.Icon
-							</div>
+						class="flex items-center px-6 py-4 gap-5 transition-all duration-200 group cursor-pointer"
+						class={
+							templ.KV("hover:bg-gray-700/30 dark:hover:bg-gray-700/40", !item.Disabled),
+							templ.KV("bg-gray-700/40 dark:bg-gray-700/50", item.Active),
+							templ.KV("opacity-50 cursor-not-allowed", item.Disabled),
 						}
-						<div class="flex-1 min-w-0">
-							@item.Content
-						</div>
+						{ item.Attrs... }
+					>
+						@listItemContent(item)
 					</a>
 				} else {
 					<div
-						class="flex items-center gap-3 px-4 py-3"
-						class={ templ.KV("bg-indigo-50 dark:bg-indigo-900/20", item.Active) }
-						class={ templ.KV("opacity-50 cursor-not-allowed", item.Disabled) }
-					>
-						if item.Icon != nil {
-							<div class="flex-shrink-0">
-								@item.Icon
-							</div>
+						class="flex items-center px-6 py-4 gap-5 transition-all duration-200 group"
+						class={
+							templ.KV("hover:bg-gray-700/30 dark:hover:bg-gray-700/40", !item.Disabled),
+							templ.KV("bg-gray-700/40 dark:bg-gray-700/50", item.Active),
+							templ.KV("opacity-50 cursor-not-allowed", item.Disabled),
 						}
-						<div class="flex-1 min-w-0">
-							@item.Content
-						</div>
+						{ item.Attrs... }
+					>
+						@listItemContent(item)
 					</div>
 				}
-			</li>
+			</div>
 		}
-	</ul>
+	</div>
+}
+
+// listItemContent - Internal helper for rendering list item content
+templ listItemContent(item ListItem) {
+	<!-- Left Icon/Thumbnail -->
+	if item.Thumbnail != "" {
+		<div class="flex-shrink-0">
+			<img src={ item.Thumbnail } alt={ item.Title } class="w-12 h-12 rounded-lg object-cover"/>
+		</div>
+	} else if item.Icon != nil {
+		<div class="flex-shrink-0">
+			if item.IconColor != "" {
+				<div
+					class="w-12 h-12 rounded-lg flex items-center justify-center"
+					class={
+						templ.KV("bg-purple-500/30 text-purple-300", item.IconColor == "purple"),
+						templ.KV("bg-blue-500/30 text-blue-300", item.IconColor == "blue"),
+						templ.KV("bg-red-500/30 text-red-300", item.IconColor == "red"),
+						templ.KV("bg-green-500/30 text-green-300", item.IconColor == "green"),
+						templ.KV("bg-yellow-500/30 text-yellow-300", item.IconColor == "yellow"),
+						templ.KV("bg-pink-500/30 text-pink-300", item.IconColor == "pink"),
+						templ.KV("bg-indigo-500/30 text-indigo-300", item.IconColor == "indigo"),
+						templ.KV("bg-gray-500/30 text-gray-300", item.IconColor == "gray"),
+					}
+				>
+					@item.Icon
+				</div>
+			} else {
+				@item.Icon
+			}
+		</div>
+	}
+
+	<!-- Content -->
+	<div class="flex-1 min-w-0">
+		if item.Title != "" {
+			<h3 class="text-sm font-medium text-gray-100 dark:text-gray-200 truncate">
+				{ item.Title }
+			</h3>
+			if item.Subtitle != "" || item.Metadata != "" {
+				<div class="flex items-center gap-2 mt-1">
+					if item.Subtitle != "" {
+						<p class="text-xs text-gray-400 dark:text-gray-500">
+							{ item.Subtitle }
+						</p>
+					}
+					if item.Metadata != "" {
+						<span class="text-xs text-gray-600 dark:text-gray-600">•</span>
+						<p class="text-xs text-gray-400 dark:text-gray-500">
+							{ item.Metadata }
+						</p>
+					}
+				</div>
+			}
+		}
+	</div>
+
+	<!-- Right Actions -->
+	if item.Actions != nil {
+		<div class="flex-shrink-0 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+			@item.Actions
+		</div>
+	}
+}
+
+// ListActions - Common action buttons for list items
+templ ListActions(downloadHref string, menuItems []ActionMenuItem) {
+	<div class="flex items-center gap-1">
+		if downloadHref != "" {
+			<a
+				href={ templ.URL(downloadHref) }
+				download
+				class="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-700/50 rounded-lg transition-colors"
+				onclick="event.stopPropagation()"
+			>
+				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+				</svg>
+			</a>
+		}
+		if len(menuItems) > 0 {
+			<div onclick="event.stopPropagation()">
+				@ActionMenu(menuItems)
+			</div>
+		}
+	</div>
 }

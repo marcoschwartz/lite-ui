@@ -12,11 +12,9 @@ templ DataDisplayPage() {
 				@ui.Card(ui.CardConfig{Title: "Carousel"}, CarouselDemo())
 			</div>
 
-			<!-- List -->
-			<div class="mb-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-				@ui.Card(ui.CardConfig{Title: "Default List"}, ListDefaultDemo())
-				@ui.Card(ui.CardConfig{Title: "Bordered List"}, ListBorderedDemo())
-				@ui.Card(ui.CardConfig{Title: "Divided List"}, ListDividedDemo())
+			<!-- File List -->
+			<div class="mb-8">
+				@ui.Card(ui.CardConfig{Title: "File List"}, FileListDemo())
 			</div>
 
 			<!-- Chat Bubbles -->
@@ -77,49 +75,85 @@ templ CarouselSlide3() {
 	</div>
 }
 
-templ ListDefaultDemo() {
-	@ui.List(GetListItems(), "default")
+templ FileListDemo() {
+	@ui.List(GetFileListItems())
 }
 
-templ ListBorderedDemo() {
-	@ui.List(GetListItems(), "bordered")
-}
-
-templ ListDividedDemo() {
-	@ui.List(GetListItems(), "divided")
-}
-
-func GetListItems() []ui.ListItem {
+func GetFileListItems() []ui.ListItem {
 	return []ui.ListItem{
 		{
-			Content: ListItemContent("Dashboard", "View your overview"),
-			Icon:    ui.IconHome(),
-			Href:    "/",
-			Active:  true,
+			Title:     "Screenshot 2025-10-06 at 11.19.00.png",
+			Subtitle:  "72.0 KB",
+			Metadata:  "Oct 6, 2025",
+			Icon:      ui.IconImage(),
+			IconColor: "purple",
+			Actions:   ui.ListActions("/download/screenshot1.png", []ui.ActionMenuItem{}),
 		},
 		{
-			Content: ListItemContent("Settings", "Manage preferences"),
-			Icon:    ui.IconCheck("indigo"),
-			Href:    "/settings",
+			Title:     "Screenshot 2025-10-06 at 14.29.22.png",
+			Subtitle:  "332.2 KB",
+			Metadata:  "Oct 6, 2025",
+			Icon:      ui.IconImage(),
+			IconColor: "purple",
+			Actions:   ui.ListActions("", []ui.ActionMenuItem{
+				{Label: "Download", Href: "#"},
+				{Label: "Share", Href: "#"},
+				{Label: "Delete", Href: "#", Danger: true, Divider: true},
+			}),
 		},
 		{
-			Content: ListItemContent("Profile", "Edit your profile"),
-			Icon:    ui.IconFolder(),
-			Href:    "/profile",
+			Title:     "Blends.mp4",
+			Subtitle:  "73.1 MB",
+			Metadata:  "Oct 5, 2025",
+			Icon:      ui.IconVideo(),
+			IconColor: "blue",
+			Actions:   ui.ListActions("/download/blends.mp4", []ui.ActionMenuItem{}),
 		},
 		{
-			Content: ListItemContent("Disabled Item", "This is disabled"),
-			Icon:    ui.IconChart("gray"),
-			Disabled: true,
+			Title:     "14218958_2160_3840_60fps.mp4",
+			Subtitle:  "54.0 MB",
+			Metadata:  "Oct 4, 2025",
+			Icon:      ui.IconVideo(),
+			IconColor: "blue",
+		},
+		{
+			Title:     "invoice-INV-2025-09-1758878792650.pdf",
+			Subtitle:  "7.2 KB",
+			Metadata:  "Oct 3, 2025",
+			Icon:      ui.IconPdf(),
+			IconColor: "red",
+		},
+		{
+			Title:     "invoice-INV-2025-09-1758878684135.pdf",
+			Subtitle:  "7.3 KB",
+			Metadata:  "Oct 3, 2025",
+			Icon:      ui.IconPdf(),
+			IconColor: "red",
+		},
+		{
+			Title:     "71NItYPcbiL._AC_SX679_.jpg",
+			Subtitle:  "80.3 KB",
+			Metadata:  "Oct 3, 2025",
+			Icon:      ui.IconImage(),
+			IconColor: "purple",
+			Thumbnail: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=100&h=100&fit=crop",
+		},
+		{
+			Title:     "12263575_1280_720_30fps.mp4",
+			Subtitle:  "3.9 MB",
+			Metadata:  "Oct 3, 2025",
+			Icon:      ui.IconVideo(),
+			IconColor: "blue",
+		},
+		{
+			Title:     "Invoice-B5067007-0106.pdf",
+			Subtitle:  "31.1 KB",
+			Metadata:  "Oct 3, 2025",
+			Icon:      ui.IconPdf(),
+			IconColor: "red",
+			Active:    true,
 		},
 	}
-}
-
-templ ListItemContent(title string, subtitle string) {
-	<div>
-		<p class="font-medium text-gray-900 dark:text-gray-100">{ title }</p>
-		<p class="text-sm text-gray-500 dark:text-gray-400">{ subtitle }</p>
-	</div>
 }
 
 templ ChatBubbleDemo() {

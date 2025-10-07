@@ -36,6 +36,7 @@ templ Accordion(items []AccordionItem, allowMultiple bool) {
 				>
 					<span class="font-semibold">{ item.Title }</span>
 					<svg
+						x-cloak
 						if allowMultiple {
 							:class={ fmt.Sprintf("{ 'rotate-180': openItems.includes('%s') }", item.ID) }
 						} else {
