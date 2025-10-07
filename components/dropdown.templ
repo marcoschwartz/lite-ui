@@ -4,6 +4,7 @@ package components
 templ Dropdown(label string, items []DropdownItem) {
 	<div x-data="{ open: false }" class="relative inline-block">
 		<button
+			x-cloak
 			@click="open = !open"
 			@click.away="open = false"
 			type="button"

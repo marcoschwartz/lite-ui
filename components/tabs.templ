@@ -18,6 +18,7 @@ templ Tabs(id string, tabs []Tab) {
 			<nav class="-mb-px flex gap-6" aria-label="Tabs">
 				for _, tab := range tabs {
 					<button
+						x-cloak
 						type="button"
 						@click={ fmt.Sprintf("activeTab = '%s'", tab.ID) }
 						class="whitespace-nowrap border-b-2 py-3 px-1 text-sm font-medium transition-all"

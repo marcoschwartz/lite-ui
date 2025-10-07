@@ -5,6 +5,16 @@ All notable changes to Lite UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.12] - 2025-01-07
+
+### Fixed
+- Fixed Alpine.js flashing across multiple components by adding x-cloak to all dynamic elements
+- Fixed Tabs component buttons flashing on page load
+- Fixed Dropdown component button flashing on page load
+- Fixed DarkMode toggle button and slider flashing on page load
+- Fixed Select component options and chevron icon flashing
+- Resolved cascade flashing issue where Dropdown at top of page caused ActionMenu at bottom to flicker
+
 ## [0.1.11] - 2025-01-07
 
 ### Fixed
