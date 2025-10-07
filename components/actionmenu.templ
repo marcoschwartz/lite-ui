@@ -16,6 +16,7 @@ templ ActionMenu(items []ActionMenuItem) {
 		@click.away="open = false"
 	>
 		<button
+			x-cloak
 			x-ref="trigger"
 			@click="
 				if (!open) {
